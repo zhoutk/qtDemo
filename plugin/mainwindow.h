@@ -56,7 +56,9 @@ public:
 
     void MainWindow::slt_WidgetActionTriggered()
     {
-        auto centerWidget = qobject_cast<QtPluginDemoInterface*>(sender()->parent())->centerWidget();
+        QtPluginDemoInterface * plg = qobject_cast<QtPluginDemoInterface*>(sender()->parent());
+        auto centerWidget = plg->centerWidget();
+        (qobject_cast<QPushButton*>(centerWidget))->setText(plg->information());
         setCentralWidget(centerWidget);
     }
 

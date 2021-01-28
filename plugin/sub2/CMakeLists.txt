@@ -26,7 +26,7 @@ endif()
 #查找需要的Qt库文件，最好每一个库都要写，Qt也会根据依赖关系自动添加
 find_package(Qt5Widgets)
 
-FILE(GLOB SRC_FILES "*.cpp" "../plugindemoplugin.h")
+FILE(GLOB SRC_FILES "*.cpp")
 FILE(GLOB HEAD_FILES "*.h")
 FILE(GLOB UI_FILES "*.ui") 
 
