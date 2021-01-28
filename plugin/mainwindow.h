@@ -22,9 +22,9 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-    int MainWindow::loadPlugins();
-    void MainWindow::populateMenus(QObject * pluginInterface,QtPluginDemoInterface*i );
-    void MainWindow::slt_WidgetActionTriggered();
+    int loadPlugins();
+    void populateMenus(QObject * pluginInterface,QtPluginDemoInterface*i );
+    void slt_WidgetActionTriggered();
 
 private:
     Ui::MainWindow *ui;
