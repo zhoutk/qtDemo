@@ -13,8 +13,8 @@ public:
     pluginDemo2(){};
     ~pluginDemo2(){};
 
-    virtual QString name() {return "tow";};
-    virtual QString information() {return "my name is tow.";};
+    virtual QString name() override;
+    virtual QString information() override;
     virtual QWidget *centerWidget() override;
 };
 
