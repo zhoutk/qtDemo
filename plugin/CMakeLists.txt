@@ -6,13 +6,19 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
+# set(CMAKE_AUTORCC ON)
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
+message("Looking for Qt...")
+find_package(Qt5 REQUIRED Widgets)
+find_package(Qt5Widgets)
+if (${Qt5_FOUND})
+    message("Found Qt " ${Qt5_VERSION})
+else()
+    message("Couldn't find Qt")
+endif()
 
 set(PROJECT_SOURCES
         main.cpp
@@ -22,23 +28,9 @@ set(PROJECT_SOURCES
         plugindemoplugin.h
 )
 
-if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    qt_add_executable(demo
-        ${PROJECT_SOURCES}
-    )
-else()
-    if(ANDROID)
-        add_library(demo SHARED
-            ${PROJECT_SOURCES}
-        )
-    else()
-        add_executable(demo
-            ${PROJECT_SOURCES}
-        )
-    endif()
-endif()
+add_executable(${PROJECT_NAME} ${PROJECT_SOURCES} )
 
 add_subdirectory(sub1)
 add_subdirectory(sub2)
 
-target_link_libraries(demo PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(${PROJECT_NAME} Qt5::Widgets)
