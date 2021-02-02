@@ -30,9 +30,9 @@ find_package(Qt5Core)
 find_package(Qt5Gui)
 find_package(Qt5Network)
 
-FILE(GLOB SRC_FILES "./src/*.cpp")
-FILE(GLOB HEAD_FILES "./src/*.h")
-FILE(GLOB UI_FILES "./src/*.ui") 
+FILE(GLOB_RECURSE SRC_FILES "./src/*.cpp")
+FILE(GLOB_RECURSE HEAD_FILES "./src/*.h")
+FILE(GLOB_RECURSE UI_FILES "./src/*.ui") 
 
 qt5_add_resources(QRC_FTP_FILES "./src/ftp.qrc")
 
