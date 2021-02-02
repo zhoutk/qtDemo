@@ -312,20 +312,22 @@ void FtpWindow::ftpCommandFinished(int, bool error)
 void FtpWindow::addToList(const QUrlInfo &urlInfo)
 {
     QTreeWidgetItem *item = new QTreeWidgetItem;
-    item->setText(0, urlInfo.name());
-    item->setText(1, QString::number(urlInfo.size()));
-    item->setText(2, urlInfo.owner());
-    item->setText(3, urlInfo.group());
-    item->setText(4, urlInfo.lastModified().toString("MMM dd yyyy"));
+    if (urlInfo.name().compare(".") != 0) {
+		item->setText(0, urlInfo.name());
+		item->setText(1, QString::number(urlInfo.size()));
+		item->setText(2, urlInfo.owner());
+		item->setText(3, urlInfo.group());
+		item->setText(4, urlInfo.lastModified().toString("MMM dd yyyy"));
 
-    QPixmap pixmap(urlInfo.isDir() ? ":/images/dir.png" : ":/images/file.png");
-    item->setIcon(0, pixmap);
+		QPixmap pixmap(urlInfo.isDir() ? ":/images/dir.png" : ":/images/file.png");
+		item->setIcon(0, pixmap);
 
-    isDirectory[urlInfo.name()] = urlInfo.isDir();
-    fileList->addTopLevelItem(item);
-    if (!fileList->currentItem()) {
-        fileList->setCurrentItem(fileList->topLevelItem(0));
-        fileList->setEnabled(true);
+		isDirectory[urlInfo.name()] = urlInfo.isDir();
+		fileList->addTopLevelItem(item);
+		if (!fileList->currentItem()) {
+			fileList->setCurrentItem(fileList->topLevelItem(0));
+			fileList->setEnabled(true);
+		}
     }
 }
 //![10]
