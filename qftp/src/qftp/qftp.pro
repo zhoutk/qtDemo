@@ -1,8 +1,11 @@
 load(qt_build_config)
 
 TARGET = QtFtp
-CONFIG += static
-CONFIG -= shared
+
+#CONFIG -= static
+CONFIG += staticlib
+CONFIG += shared
+
 QT = core network
 
 MODULE_PRI = ../../modules/qt_ftp.pri

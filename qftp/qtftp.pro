@@ -17,6 +17,4 @@ module_qtftp_tests.CONFIG = no_default_install
 !contains(QT_BUILD_PARTS,tests):module_qtftp_tests.CONFIG += no_default_target
 
 SUBDIRS += module_qtftp_src \
-           module_qtftp_examples \
-           module_qtftp_tests \
-
+           module_qtftp_examples
