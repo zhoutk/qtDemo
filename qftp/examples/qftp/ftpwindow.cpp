@@ -40,7 +40,7 @@
 
 #include <QtWidgets>
 #include <QtNetwork>
-#include <QtFtp>
+#include <QFtp>
 
 #include "ftpwindow.h"
 
@@ -56,6 +56,7 @@ FtpWindow::FtpWindow(QWidget *parent)
     fileList = new QTreeWidget;
     fileList->setEnabled(false);
     fileList->setRootIsDecorated(false);
+    fileList->setSelectionMode(QAbstractItemView::ExtendedSelection);
     fileList->setHeaderLabels(QStringList() << tr("Name") << tr("Size") << tr("Owner") << tr("Group") << tr("Time"));
     fileList->header()->setStretchLastSection(false);
 
@@ -75,13 +76,19 @@ FtpWindow::FtpWindow(QWidget *parent)
     buttonBox->addButton(downloadButton, QDialogButtonBox::ActionRole);
     buttonBox->addButton(quitButton, QDialogButtonBox::RejectRole);
 
-    progressDialog = new QProgressDialog(this);
+    progressDialog = new QProgressDialog("download...", nullptr, 0, 100, this);
+    progressDialog->setWindowModality(Qt::WindowModal);
+    auto winFlags = windowFlags() & ~Qt::WindowMinMaxButtonsHint;
+    progressDialog->setWindowFlags(winFlags &~ Qt::WindowCloseButtonHint);
+    progressDialog->reset();
+    progressDialog->setAutoClose(false);
+    progressDialog->setAutoReset(false);
 
     connect(fileList, SIGNAL(itemActivated(QTreeWidgetItem*,int)),
             this, SLOT(processItem(QTreeWidgetItem*,int)));
     connect(fileList, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)),
             this, SLOT(enableDownloadButton()));
-    connect(progressDialog, SIGNAL(canceled()), this, SLOT(cancelDownload()));
+    //connect(progressDialog, SIGNAL(canceled()), this, SLOT(cancelDownload()));
     connect(connectButton, SIGNAL(clicked()), this, SLOT(connectOrDisconnect()));
     connect(cdToParentButton, SIGNAL(clicked()), this, SLOT(cdToParent()));
     connect(downloadButton, SIGNAL(clicked()), this, SLOT(downloadFile()));
@@ -204,32 +211,30 @@ void FtpWindow::connectToFtp()
 //![3]
 void FtpWindow::downloadFile()
 {
-    QString fileName = fileList->currentItem()->text(0);
-//![3]
-//
-    if (QFile::exists(fileName)) {
-        QMessageBox::information(this, tr("FTP"),
-                                 tr("There already exists a file called %1 in "
-                                    "the current directory.")
-                                 .arg(fileName));
-        return;
+    QList<QTreeWidgetItem*> selectedItemList = fileList->selectedItems();
+    for (int i = 0; i < selectedItemList.size(); i++)
+    {
+        QString fileName = selectedItemList[i]->text(0);
+        //if (QFile::exists(fileName)) {
+        //	QMessageBox::information(this, tr("FTP"),
+        //		tr("There already exists a file called %1 in "
+        //			"the current directory.")
+        //		.arg(fileName));
+        //	return;
+        //}
+        file = new QFile(fileName);
+        if (!file->open(QIODevice::WriteOnly)) {
+            QMessageBox::information(this, tr("FTP"),
+                tr("Unable to save the file %1: %2.")
+                .arg(fileName).arg(file->errorString()));
+            delete file;
+            return;
+        }
+        ftp->get(fileName, file);
+        progressDialog->setLabelText(tr("Downloading %1...").arg(fileName));
+        downloadButton->setEnabled(false);
+        progressDialog->exec();
     }
-
-//![4]
-    file = new QFile(fileName);
-    if (!file->open(QIODevice::WriteOnly)) {
-        QMessageBox::information(this, tr("FTP"),
-                                 tr("Unable to save the file %1: %2.")
-                                 .arg(fileName).arg(file->errorString()));
-        delete file;
-        return;
-    }
-
-    ftp->get(fileList->currentItem()->text(0), file);
-
-    progressDialog->setLabelText(tr("Downloading %1...").arg(fileName));
-    downloadButton->setEnabled(false);
-    progressDialog->exec();
 }
 //![4]
 
@@ -291,7 +296,7 @@ void FtpWindow::ftpCommandFinished(int, bool error)
         }
         delete file;
         enableDownloadButton();
-        progressDialog->hide();
+        progressDialog->close();
 //![8]
 //![9]
     } else if (ftp->currentCommand() == QFtp::List) {
