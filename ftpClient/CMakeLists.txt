@@ -38,7 +38,7 @@ qt5_add_resources(QRC_FTP_FILES "./src/ftp.qrc")
 
 source_group("Head Files" FILES ${HEAD_FILES} )
 source_group("Form Files" FILES ${UI_FILES} )
-source_group("Src Files" FILES ${SRC_FILES} )
+# source_group("Src Files" FILES ${SRC_FILES} )
 
 add_executable(${PROJECT_NAME} ${SRC_FILES} ${HEAD_FILES} ${UI_FILES} ${QRC_FTP_FILES})
 
