@@ -44,11 +44,11 @@
 #include <QDialog>
 #include <QHash>
 #include <QNetworkConfigurationManager>
+#include "qftp/qftp.h"
 
 QT_BEGIN_NAMESPACE
 class QDialogButtonBox;
 class QFile;
-class QFtp;
 class QLabel;
 class QLineEdit;
 class QTreeWidget;

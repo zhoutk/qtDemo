@@ -40,8 +40,6 @@
 
 #include <QtWidgets>
 #include <QtNetwork>
-#include <QFtp>
-
 #include "ftpwindow.h"
 
 FtpWindow::FtpWindow(QWidget *parent)
