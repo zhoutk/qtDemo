@@ -76,13 +76,13 @@ FtpWindow::FtpWindow(QWidget *parent)
     buttonBox->addButton(downloadButton, QDialogButtonBox::ActionRole);
     buttonBox->addButton(quitButton, QDialogButtonBox::RejectRole);
 
-    progressDialog = new QProgressDialog("download...", nullptr, 0, 100, this);
-    progressDialog->setWindowModality(Qt::WindowModal);
-    auto winFlags = windowFlags() & ~Qt::WindowMinMaxButtonsHint;
-    progressDialog->setWindowFlags(winFlags &~ Qt::WindowCloseButtonHint);
-    progressDialog->reset();
-    progressDialog->setAutoClose(false);
-    progressDialog->setAutoReset(false);
+    //progressDialog = new QProgressDialog("download...", nullptr, 0, 100, this);
+    //progressDialog->setWindowModality(Qt::WindowModal);
+    //auto winFlags = windowFlags() & ~Qt::WindowMinMaxButtonsHint;
+    //progressDialog->setWindowFlags(winFlags &~ Qt::WindowCloseButtonHint);
+    //progressDialog->reset();
+    //progressDialog->setAutoClose(false);
+    //progressDialog->setAutoReset(false);
 
     connect(fileList, SIGNAL(itemActivated(QTreeWidgetItem*,int)),
             this, SLOT(processItem(QTreeWidgetItem*,int)));
@@ -231,9 +231,9 @@ void FtpWindow::downloadFile()
             return;
         }
         ftp->get(fileName, file);
-        progressDialog->setLabelText(tr("Downloading %1...").arg(fileName));
+        //progressDialog->setLabelText(tr("Downloading %1...").arg(fileName));
         downloadButton->setEnabled(false);
-        progressDialog->exec();
+        //progressDialog->exec();
     }
 }
 //![4]
@@ -294,9 +294,10 @@ void FtpWindow::ftpCommandFinished(int, bool error)
                                  .arg(file->fileName()));
             file->close();
         }
+        qDebug() << " ----------- delete the file name : " << file->fileName();
         delete file;
         enableDownloadButton();
-        progressDialog->close();
+        //progressDialog->close();
 //![8]
 //![9]
     } else if (ftp->currentCommand() == QFtp::List) {
@@ -375,8 +376,8 @@ void FtpWindow::cdToParent()
 void FtpWindow::updateDataTransferProgress(qint64 readBytes,
                                            qint64 totalBytes)
 {
-    progressDialog->setMaximum(totalBytes);
-    progressDialog->setValue(readBytes);
+    //progressDialog->setMaximum(totalBytes);
+    //progressDialog->setValue(readBytes);
 }
 //![13]
 
