@@ -81,7 +81,7 @@ void QFtpPI::abort()
 #if defined(QFTPPI_DEBUG)
     qDebug("QFtpPI send: ABOR");
 #endif
-    commandSocket.write("ABOR\r\n", 6);
+    commandSocket.write("REIN\r\n", 6);
 
     if (currentCmd.startsWith(QLatin1String("STOR ")))
         dtp.abortConnection();
