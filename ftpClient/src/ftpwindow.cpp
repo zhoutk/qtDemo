@@ -305,7 +305,7 @@ void FtpWindow::ftpCommandFinished(int id, bool error)
         delete file;
         file = nullptr;
         enableDownloadButton();
-        progressDialog->close();
+        progressDialog->hide();
 //![8]
 //![9]
     } else if (ftp->currentCommand() == QFtp::List) {
@@ -384,8 +384,10 @@ void FtpWindow::cdToParent()
 void FtpWindow::updateDataTransferProgress(qint64 readBytes,
                                            qint64 totalBytes)
 {
-    progressDialog->setMaximum(totalBytes);
-    progressDialog->setValue(readBytes);
+    if (!progressDialog->isHidden()) {
+		progressDialog->setMaximum(totalBytes);
+		progressDialog->setValue(readBytes);
+    }
 }
 //![13]
 
