@@ -43,6 +43,7 @@
 
 #include <QDialog>
 #include <QHash>
+#include <QMap>
 #include <QNetworkConfigurationManager>
 #include "qftp/qftp.h"
 
@@ -100,7 +101,7 @@ private:
     QHash<QString, bool> isDirectory;
     QString currentPath;
     QFtp *ftp;
-    QFile *file;
+    QMap<int, QFile *> files;
 
     QNetworkSession *networkSession;
     QNetworkConfigurationManager manager;

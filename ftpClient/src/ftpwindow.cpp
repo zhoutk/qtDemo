@@ -220,7 +220,7 @@ void FtpWindow::downloadFile()
         //		.arg(fileName));
         //	return;
         //}
-        file = new QFile(fileName);
+        QFile* file = new QFile(fileName);
         if (!file->open(QIODevice::WriteOnly)) {
             QMessageBox::information(this, tr("FTP"),
                 tr("Unable to save the file %1: %2.")
@@ -228,7 +228,8 @@ void FtpWindow::downloadFile()
             delete file;
             return;
         }
-        ftp->get(fileName, file);
+        int id = ftp->get(fileName, file);
+        files.insert(id, file);
         //progressDialog->setLabelText(tr("Downloading %1...").arg(fileName));
         downloadButton->setEnabled(false);
         //progressDialog->exec();
@@ -239,18 +240,18 @@ void FtpWindow::downloadFile()
 //![5]
 void FtpWindow::cancelDownload()
 {
-    ftp->abort();
+    //ftp->abort();
 
-    if (file->exists()) {
-        file->close();
-        file->remove();
-    }
-    delete file;
+    //if (file->exists()) {
+    //    file->close();
+    //    file->remove();
+    //}
+    //delete file;
 }
 //![5]
 
 //![6]
-void FtpWindow::ftpCommandFinished(int, bool error)
+void FtpWindow::ftpCommandFinished(int id, bool error)
 {
 #ifndef QT_NO_CURSOR
     setCursor(Qt::ArrowCursor);
@@ -282,6 +283,7 @@ void FtpWindow::ftpCommandFinished(int, bool error)
 
 //![8]
     if (ftp->currentCommand() == QFtp::Get) {
+        QFile* file = files.take(id);
         if (error) {
             statusLabel->setText(tr("Canceled download of %1.")
                                  .arg(file->fileName()));
@@ -294,6 +296,7 @@ void FtpWindow::ftpCommandFinished(int, bool error)
         }
         qDebug() << " ----------- delete the file name : " << file->fileName();
         delete file;
+        file = nullptr;
         enableDownloadButton();
         //progressDialog->close();
 //![8]
