@@ -93,7 +93,8 @@ private:
     QPushButton *cdToParentButton;
     QPushButton *connectButton;
     QPushButton *downloadButton;
-    QPushButton *quitButton;
+	QPushButton* quitButton;
+	QPushButton* cancleButton;
     QDialogButtonBox *buttonBox;
     QProgressDialog *progressDialog;
 

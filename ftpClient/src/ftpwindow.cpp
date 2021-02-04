@@ -70,9 +70,13 @@ FtpWindow::FtpWindow(QWidget *parent)
 
     quitButton = new QPushButton(tr("Quit"));
 
+	cancleButton = new QPushButton(tr("Cancle"));
+	cancleButton->setEnabled(true);
+
     buttonBox = new QDialogButtonBox;
     buttonBox->addButton(downloadButton, QDialogButtonBox::ActionRole);
     buttonBox->addButton(quitButton, QDialogButtonBox::RejectRole);
+    buttonBox->addButton(cancleButton, QDialogButtonBox::ActionRole);
 
     //progressDialog = new QProgressDialog("download...", nullptr, 0, 100, this);
     //progressDialog->setWindowModality(Qt::WindowModal);
@@ -91,6 +95,7 @@ FtpWindow::FtpWindow(QWidget *parent)
     connect(cdToParentButton, SIGNAL(clicked()), this, SLOT(cdToParent()));
     connect(downloadButton, SIGNAL(clicked()), this, SLOT(downloadFile()));
     connect(quitButton, SIGNAL(clicked()), this, SLOT(close()));
+    connect(cancleButton, SIGNAL(clicked()), this, SLOT(cancelDownload()));
 
     QHBoxLayout *topLayout = new QHBoxLayout;
     topLayout->addWidget(ftpServerLabel);
@@ -240,7 +245,7 @@ void FtpWindow::downloadFile()
 //![5]
 void FtpWindow::cancelDownload()
 {
-    //ftp->abort();
+    ftp->abort();
 
     //if (file->exists()) {
     //    file->close();
