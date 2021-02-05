@@ -211,12 +211,13 @@ void FtpWindow::downAllFile(QString rootDir) {
 	}
     if (downDirs.size() > 0) {
         enterSubDir = true;
-        QString nextDir = downDirs.pop();
+        QString nextDir("/");
+        nextDir.append(downDirs.pop());
         fileList->clear();
-        ftp->cd(nextDir);
-        currentPath += '/';
-        currentPath += nextDir;
-        //ftp->list();
+        bool f = ftp->cd(nextDir);
+        //currentPath += '/';
+        currentPath = nextDir;
+        ftp->list();
     }
 }
 
@@ -302,35 +303,42 @@ void FtpWindow::ftpCommandFinished(int id, bool error)
 }
 
 //![10]
-void FtpWindow::addToList(const QVector<QUrlInfo>&urlInfo)
+void FtpWindow::addToList(const QVector<QUrlInfo>& urlInfos)
 {
-    QTreeWidgetItem *item = new QTreeWidgetItem;
-  //  if (urlInfo.name().compare(".") != 0) {
-		//item->setText(0, urlInfo.name().toLatin1());
-		//item->setText(1, QString::number(urlInfo.size()));
-  //      item->setText(2, QString::number(urlInfo.isDir()));
-		//item->setText(3, urlInfo.owner());
-		//item->setText(4, urlInfo.group());
-		//item->setText(5, urlInfo.lastModified().toString("MMM dd yyyy"));
+	for (int i = 0; i < urlInfos.size(); i++)
+	{
+		QTreeWidgetItem* item = new QTreeWidgetItem;
+		QUrlInfo urlInfo = urlInfos[i];
+		if (urlInfo.name().compare(".") != 0) {
+			item->setText(0, urlInfo.name().toLatin1());
+			item->setText(1, QString::number(urlInfo.size()));
+			item->setText(2, QString::number(urlInfo.isDir()));
+			item->setText(3, urlInfo.owner());
+			item->setText(4, urlInfo.group());
+			item->setText(5, urlInfo.lastModified().toString("MMM dd yyyy"));
 
-		//QPixmap pixmap(urlInfo.isDir() ? ":/images/dir.png" : ":/images/file.png");
-		//item->setIcon(0, pixmap);
+			QPixmap pixmap(urlInfo.isDir() ? ":/images/dir.png" : ":/images/file.png");
+			item->setIcon(0, pixmap);
 
-		//isDirectory[urlInfo.name()] = urlInfo.isDir();
-		//fileList->addTopLevelItem(item);
-  //      if (!enterSubDir) {
-		//	if (!fileList->currentItem()) {
-		//		fileList->setCurrentItem(fileList->topLevelItem(0));
-		//		fileList->setEnabled(true);
-		//	}
-  //      }
-  //      else {
-  //          //fileList->selectAll();
-  //          downAllFile(currentPath);
-  //          cdToParent();
-  //      }
+			isDirectory[urlInfo.name()] = urlInfo.isDir();
+			fileList->addTopLevelItem(item);
+		}
+	}
 
-    //}
+	if (!enterSubDir) {
+		if (!fileList->currentItem()) {
+			fileList->setCurrentItem(fileList->topLevelItem(0));
+			fileList->setEnabled(true);
+		}
+	}
+	else {
+		fileList->selectAll();
+		downAllFile(currentPath);
+		//cdToParent();
+        if (currentPath == "") {
+            enterSubDir = false;
+        }
+	}
 }
 //![10]
 
