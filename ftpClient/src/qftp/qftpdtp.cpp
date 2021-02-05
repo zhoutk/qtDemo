@@ -422,8 +422,8 @@ void QFtpDTP::socketReadyRead()
 #endif
 				if (data.dev)       // make sure it wasn't deleted in the slot
 					data.dev->write(ba);
-				emit dataTransferProgress(bytesDone, bytesTotal);
-				qDebug() << "----------------------------" << bytesDone;
+				emit dataTransferProgress(bytesRead, bytesTotal);
+				//qDebug() << "----------------------------" << bytesDone;
 				// Need to loop; dataTransferProgress is often connected to
 				// slots that update the GUI (e.g., progress bar values), and
 				// if events are processed, more data may have arrived.

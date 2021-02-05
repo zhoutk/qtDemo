@@ -83,6 +83,8 @@ private slots:
                                     qint64 totalBytes);
     void enableDownloadButton();
     void enableConnectButton();
+
+    void showProgressDialog();
 //![0]
 
 private:
@@ -105,6 +107,12 @@ private:
 
     QNetworkSession *networkSession;
     QNetworkConfigurationManager manager;
+
+	long long downloadBytes;
+	long long downloadTotalBytes;
+	int downloadTotalFiles;
+    QString downloadPath;
+    bool downFinished;
 //![1]
 };
 
