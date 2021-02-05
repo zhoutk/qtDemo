@@ -4,7 +4,7 @@
 
 FtpWindow::FtpWindow(QWidget* parent)
     : QDialog(parent), ftp(0), networkSession(0), downloadBytes(0),
-    downloadTotalBytes(0), downloadTotalFiles(0), downloadPath("c:/temp/ftp/down/"),
+    downloadTotalBytes(0), downloadTotalFiles(0), downloadPath("c:/temp/ftpdown/"),
     downFinished(true)
 {
     ftpServerLabel = new QLabel(tr("Ftp &server:"));
@@ -178,13 +178,6 @@ void FtpWindow::downloadFile()
     {
         QString fileName = selectedItemList[i]->text(0);
         downloadTotalBytes += selectedItemList[i]->text(1).toLongLong();
-        //if (QFile::exists(fileName)) {
-        //	QMessageBox::information(this, tr("FTP"),
-        //		tr("There already exists a file called %1 in "
-        //			"the current directory.")
-        //		.arg(fileName));
-        //	return;
-        //}
         QDir downDir(downloadPath);
         QString dirTmp(downloadPath.endsWith("/") ? downloadPath : downloadPath + "/");
         if (!downDir.exists(downloadPath)) {
@@ -213,26 +206,11 @@ void FtpWindow::showProgressDialog() {
     }
 }
 
-//![5]
 void FtpWindow::cancelDownload()
 {
     ftp->abort();
-
-	//QMap<int, QFile*>::ConstIterator i = files.constBegin();
-	//while (i != files.constEnd())
-	//{
-	//	QFile* file = i.value();
-	//	if (file->exists()) {
-	//		file->close();
-	//		file->remove();
-	//	}
-	//	delete file;
-	//	++i;
-	//}
 }
-//![5]
 
-//![6]
 void FtpWindow::ftpCommandFinished(int id, bool error)
 {
 #ifndef QT_NO_CURSOR
@@ -381,13 +359,14 @@ void FtpWindow::updateDataTransferProgress(qint64 readBytes,
 //![14]
 void FtpWindow::enableDownloadButton()
 {
-    QTreeWidgetItem *current = fileList->currentItem();
+    downloadButton->setEnabled(true);
+   /* QTreeWidgetItem *current = fileList->currentItem();
     if (current) {
         QString currentFile = current->text(0);
         downloadButton->setEnabled(!isDirectory.value(currentFile));
     } else {
         downloadButton->setEnabled(false);
-    }
+    }*/
 }
 //![14]
 
