@@ -198,7 +198,7 @@ void FtpWindow::downloadFile()
             delete file;
             return;
         }
-        int id = ftp->get(fileName, file);
+        int id = ftp->get(QString::fromLatin1((selectedItemList[i]->text(0)).toStdString().c_str()), file);
 		files.insert(id, file);
 		downloadButton->setEnabled(false);
 	}
@@ -307,7 +307,7 @@ void FtpWindow::addToList(const QUrlInfo &urlInfo)
 {
     QTreeWidgetItem *item = new QTreeWidgetItem;
     if (urlInfo.name().compare(".") != 0) {
-		item->setText(0, urlInfo.name());
+		item->setText(0, urlInfo.name().toLatin1());
 		item->setText(1, QString::number(urlInfo.size()));
 		item->setText(2, urlInfo.owner());
 		item->setText(3, urlInfo.group());
