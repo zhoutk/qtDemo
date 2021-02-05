@@ -4,8 +4,8 @@
 
 FtpWindow::FtpWindow(QWidget* parent)
     : QDialog(parent), ftp(0), networkSession(0), downloadBytes(0),
-    downloadTotalBytes(0), downloadTotalFiles(0), downloadPath("c:/temp/ftpdown/"),
-    downFinished(true)
+    downloadTotalBytes(0), downloadTotalFiles(0), downloadPath("c:/temp/ftpdown"),
+    downFinished(true), enterSubDir(false)
 {
     ftpServerLabel = new QLabel(tr("Ftp &server:"));
     ftpServerLineEdit = new QLineEdit("ftp://test:a1b2c3@127.0.0.1:21");
@@ -17,7 +17,7 @@ FtpWindow::FtpWindow(QWidget* parent)
     fileList->setEnabled(false);
     fileList->setRootIsDecorated(false);
     fileList->setSelectionMode(QAbstractItemView::ExtendedSelection);
-    fileList->setHeaderLabels(QStringList() << tr("Name") << tr("Size") << tr("Owner") << tr("Group") << tr("Time"));
+    fileList->setHeaderLabels(QStringList() << tr("Name") << tr("Size") << tr("IsDir") << tr("Owner") << tr("Group") << tr("Time"));
     fileList->header()->setStretchLastSection(false);
 
     connectButton = new QPushButton(tr("Connect"));
@@ -135,8 +135,8 @@ void FtpWindow::connectToFtp()
     ftp = new QFtp(this);
     connect(ftp, SIGNAL(commandFinished(int,bool)),
             this, SLOT(ftpCommandFinished(int,bool)));
-    connect(ftp, SIGNAL(listInfo(QUrlInfo)),
-            this, SLOT(addToList(QUrlInfo)));
+    connect(ftp, SIGNAL(listInfos(QVector<QUrlInfo>)),
+            this, SLOT(addToList(QVector<QUrlInfo>)));
     connect(ftp, SIGNAL(dataTransferProgress(qint64,qint64)),
             this, SLOT(updateDataTransferProgress(qint64,qint64)));
 
@@ -172,35 +172,56 @@ void FtpWindow::connectToFtp()
 //![3]
 void FtpWindow::downloadFile()
 {
-    QList<QTreeWidgetItem*> selectedItemList = fileList->selectedItems();
-    downFinished = false;
-    for (int i = 0; i < selectedItemList.size(); i++)
-    {
-        QString fileName = selectedItemList[i]->text(0);
-        downloadTotalBytes += selectedItemList[i]->text(1).toLongLong();
-        QDir downDir(downloadPath);
-        QString dirTmp(downloadPath.endsWith("/") ? downloadPath : downloadPath + "/");
-        if (!downDir.exists(downloadPath)) {
-            downDir.mkpath(downloadPath);
-        }
-        QFile* file = new QFile(dirTmp.append(fileName));
-        if (!file->open(QIODevice::WriteOnly)) {
-            QMessageBox::information(this, tr("FTP"),
-                tr("Unable to save the file %1: %2.")
-                .arg(fileName).arg(file->errorString()));
-            delete file;
-            return;
-        }
-        int id = ftp->get(QString::fromLatin1((selectedItemList[i]->text(0)).toStdString().c_str()), file);
-		files.insert(id, file);
-		downloadButton->setEnabled(false);
-	}
+	downFinished = false;
+    downAllFile(currentPath);
+
+	downloadButton->setEnabled(false);
 	downloadTotalFiles = files.size();
     QTimer::singleShot(0, this, SLOT(showProgressDialog()));
 }
 
+void FtpWindow::downAllFile(QString rootDir) {
+	QList<QTreeWidgetItem*> selectedItemList = fileList->selectedItems();
+	for (int i = 0; i < selectedItemList.size(); i++)
+	{
+		QString fileName = selectedItemList[i]->text(0);
+        if (isDirectory.value(fileName)) {
+            if(fileName != "..")
+                downDirs.push(fileName);
+        }
+        else {
+			downloadTotalBytes += selectedItemList[i]->text(1).toLongLong();
+            QString dirTmp(downloadPath);
+            dirTmp.append(currentPath);
+            QDir downDir(dirTmp);
+            if (!downDir.exists(dirTmp)) {
+                downDir.mkpath(dirTmp);
+			}
+            QFile* file = new QFile(dirTmp.append("/").append(fileName));
+			if (!file->open(QIODevice::WriteOnly)) {
+				QMessageBox::information(this, tr("FTP"),
+					tr("Unable to save the file %1: %2.")
+					.arg(fileName).arg(file->errorString()));
+				delete file;
+				return;
+			}
+			int id = ftp->get(QString::fromLatin1((selectedItemList[i]->text(0)).toStdString().c_str()), file);
+			files.insert(id, file);
+        }
+	}
+    if (downDirs.size() > 0) {
+        enterSubDir = true;
+        QString nextDir = downDirs.pop();
+        fileList->clear();
+        ftp->cd(nextDir);
+        currentPath += '/';
+        currentPath += nextDir;
+        //ftp->list();
+    }
+}
+
 void FtpWindow::showProgressDialog() {
-    if (!downFinished) {
+    if (!downFinished && downloadTotalFiles > 0) {
         progressDialog->setLabelText(tr("Downloading %1 files ...").arg(downloadTotalFiles));
         progressDialog->exec();
     }
@@ -281,26 +302,35 @@ void FtpWindow::ftpCommandFinished(int id, bool error)
 }
 
 //![10]
-void FtpWindow::addToList(const QUrlInfo &urlInfo)
+void FtpWindow::addToList(const QVector<QUrlInfo>&urlInfo)
 {
     QTreeWidgetItem *item = new QTreeWidgetItem;
-    if (urlInfo.name().compare(".") != 0) {
-		item->setText(0, urlInfo.name().toLatin1());
-		item->setText(1, QString::number(urlInfo.size()));
-		item->setText(2, urlInfo.owner());
-		item->setText(3, urlInfo.group());
-		item->setText(4, urlInfo.lastModified().toString("MMM dd yyyy"));
+  //  if (urlInfo.name().compare(".") != 0) {
+		//item->setText(0, urlInfo.name().toLatin1());
+		//item->setText(1, QString::number(urlInfo.size()));
+  //      item->setText(2, QString::number(urlInfo.isDir()));
+		//item->setText(3, urlInfo.owner());
+		//item->setText(4, urlInfo.group());
+		//item->setText(5, urlInfo.lastModified().toString("MMM dd yyyy"));
 
-		QPixmap pixmap(urlInfo.isDir() ? ":/images/dir.png" : ":/images/file.png");
-		item->setIcon(0, pixmap);
+		//QPixmap pixmap(urlInfo.isDir() ? ":/images/dir.png" : ":/images/file.png");
+		//item->setIcon(0, pixmap);
 
-		isDirectory[urlInfo.name()] = urlInfo.isDir();
-		fileList->addTopLevelItem(item);
-		if (!fileList->currentItem()) {
-			fileList->setCurrentItem(fileList->topLevelItem(0));
-			fileList->setEnabled(true);
-		}
-    }
+		//isDirectory[urlInfo.name()] = urlInfo.isDir();
+		//fileList->addTopLevelItem(item);
+  //      if (!enterSubDir) {
+		//	if (!fileList->currentItem()) {
+		//		fileList->setCurrentItem(fileList->topLevelItem(0));
+		//		fileList->setEnabled(true);
+		//	}
+  //      }
+  //      else {
+  //          //fileList->selectAll();
+  //          downAllFile(currentPath);
+  //          cdToParent();
+  //      }
+
+    //}
 }
 //![10]
 

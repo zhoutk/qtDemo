@@ -93,7 +93,8 @@ public Q_SLOTS:
 
 Q_SIGNALS:
     void stateChanged(int);
-    void listInfo(const QUrlInfo&);
+	void listInfo(const QUrlInfo&);
+	void listInfos(const QVector<QUrlInfo>&);
     void readyRead();
     void dataTransferProgress(qint64, qint64);
     void rawCommandReply(int, const QString&);

@@ -386,6 +386,7 @@ void QFtpDTP::socketReadyRead()
 	}
 
 	if (pi->currentCommand().startsWith(QLatin1String("LIST"))) {
+		QVector<QUrlInfo> infos;
 		while (socket->canReadLine()) {
 			QUrlInfo i;
 			QByteArray line = socket->readLine();
@@ -393,7 +394,8 @@ void QFtpDTP::socketReadyRead()
 			qDebug("QFtpDTP read (list): '%s'", line.constData());
 #endif
 			if (parseDir(line, QLatin1String(""), &i)) {
-				emit listInfo(i);
+				infos.push_back(i);
+				//emit listInfo(i);
 			}
 			else {
 				// some FTP servers don't return a 550 if the file or directory
@@ -403,6 +405,7 @@ void QFtpDTP::socketReadyRead()
 					err = QString::fromLatin1(line);
 			}
 		}
+		emit listInfos(infos);
 	}
 	else {
 		if (!is_ba && data.dev) {

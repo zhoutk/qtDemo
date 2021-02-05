@@ -37,6 +37,8 @@ QFtp::QFtp(QObject *parent)
             SIGNAL(dataTransferProgress(qint64,qint64)));
     connect(&d->pi.dtp, SIGNAL(listInfo(QUrlInfo)),
             SIGNAL(listInfo(QUrlInfo)));
+	connect(&d->pi.dtp, SIGNAL(listInfos(QVector<QUrlInfo>)),
+		SIGNAL(listInfos(QVector<QUrlInfo>)));
 }
 
 int QFtp::connectToHost(const QString &host, quint16 port)

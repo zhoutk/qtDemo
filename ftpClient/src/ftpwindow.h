@@ -44,6 +44,7 @@
 #include <QDialog>
 #include <QHash>
 #include <QMap>
+#include <QStack>
 #include <QNetworkConfigurationManager>
 #include "qftp/qftp.h"
 
@@ -67,6 +68,7 @@ class FtpWindow : public QDialog
 public:
     FtpWindow(QWidget *parent = 0);
     QSize sizeHint() const;
+	void downAllFile(QString);
 
 //![0]
 private slots:
@@ -76,7 +78,7 @@ private slots:
     void connectToFtp();
 
     void ftpCommandFinished(int commandId, bool error);
-    void addToList(const QUrlInfo &urlInfo);
+    void addToList(const QVector<QUrlInfo>&urlInfo);
     void processItem(QTreeWidgetItem *item, int column);
     void cdToParent();
     void updateDataTransferProgress(qint64 readBytes,
@@ -113,6 +115,9 @@ private:
 	int downloadTotalFiles;
     QString downloadPath;
     bool downFinished;
+    bool enterSubDir;
+
+    QStack<QString> downDirs;
 //![1]
 };
 
