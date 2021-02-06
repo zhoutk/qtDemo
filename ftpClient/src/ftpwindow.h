@@ -117,6 +117,7 @@ private:
     bool downFinished;
     bool enterSubDir;
     QString currentDownPath;
+    //long long oldDownTotalBytes;
 
     QStack<QString> downDirs;
 //![1]

@@ -174,11 +174,9 @@ void FtpWindow::connectToFtp()
 void FtpWindow::downloadFile()
 {
 	downFinished = false;
-    downAllFile(currentPath);
-
-	downloadButton->setEnabled(false);
-	downloadTotalFiles = files.size();
-    QTimer::singleShot(0, this, SLOT(showProgressDialog()));
+	//QTimer::singleShot(0, this, SLOT(showProgressDialog()));
+	downAllFile(currentPath);
+	showProgressDialog();
 }
 
 void FtpWindow::downAllFile(QString rootDir) {
@@ -214,21 +212,22 @@ void FtpWindow::downAllFile(QString rootDir) {
     if (downDirs.size() > 0) {
         enterSubDir = true;
         QString nextDir(downDirs.pop());
-        //fileList->clear();
-        bool f = ftp->cd(nextDir);
+        ftp->cd(nextDir);
         currentDownPath = nextDir;
         ftp->list();
     }
     else {
         enterSubDir = false;
-		bool f = ftp->cd(currentPath == "" ? "/" : currentPath);
+		ftp->cd(currentPath == "" ? "/" : currentPath);
 		ftp->list();
+		downloadButton->setEnabled(false);
+		downloadTotalFiles = files.size();
     }
 }
 
 void FtpWindow::showProgressDialog() {
-    if (!downFinished && downloadTotalFiles > 0) {
-        progressDialog->setLabelText(tr("Downloading %1 files ...").arg(downloadTotalFiles));
+    if (!downFinished) {    // && downloadTotalFiles > 0
+        progressDialog->setLabelText(tr("Downloading selected files ..."));
         progressDialog->exec();
     }
 }
@@ -261,25 +260,12 @@ void FtpWindow::ftpCommandFinished(int id, bool error)
         connectButton->setEnabled(true);
         return;
     }
-//![6]
 
-//![7]
     if (ftp->currentCommand() == QFtp::Login)
         ftp->list();
-//![7]
 
-//![8]
     if (ftp->currentCommand() == QFtp::Get) {
         QFile* file = files.take(id);
-		if (files.size() == 0) {
-			downFinished = true;
-			enableDownloadButton();
-            progressDialog->reset();
-			progressDialog->hide();
-			downloadBytes = 0;
-			downloadTotalBytes = 0;
-			downloadTotalFiles = 0;
-		}
         if (error) {
             statusLabel->setText(tr("Canceled download of %1.")
                                  .arg(file->fileName()));
@@ -296,9 +282,15 @@ void FtpWindow::ftpCommandFinished(int id, bool error)
 		}
         delete file;
         file = nullptr;
-
-//![8]
-//![9]
+		if (files.size() == 0 && !enterSubDir) {
+			downFinished = true;
+			enableDownloadButton();
+			progressDialog->reset();
+			progressDialog->hide();
+			downloadBytes = 0;
+			downloadTotalBytes = 0;
+			downloadTotalFiles = 0;
+		}
     } else if (ftp->currentCommand() == QFtp::List) {
         if (isDirectory.isEmpty()) {
             fileList->addTopLevelItem(new QTreeWidgetItem(QStringList() << tr("<empty>")));
@@ -396,7 +388,10 @@ void FtpWindow::updateDataTransferProgress(qint64 readBytes,
     if (!progressDialog->isHidden()) {
 		progressDialog->setMaximum(downloadTotalBytes);
 		progressDialog->setValue(downloadBytes);
-        //qDebug() << "----------1------------------" << downloadBytes << " / " << downloadTotalBytes;
+        /*if (oldDownTotalBytes != downloadTotalBytes) {
+			qDebug() << "----------1------------------" << downloadBytes << " / " << downloadTotalBytes;
+            oldDownTotalBytes = downloadTotalBytes;
+        }*/
     }
 }
 //![13]
