@@ -234,7 +234,31 @@ void FtpWindow::showProgressDialog() {
 
 void FtpWindow::cancelDownload()
 {
-    ftp->abort();
+	ftp->abort();
+	downloadTotalBytes = 0;
+	downloadBytes = 0; 
+    if (enterSubDir) {
+        QString curTmp = currentPath;
+        enterSubDir = false;
+		downDirs.clear();
+		connectButton->click();
+		connectButton->click();
+        ftp->cd(curTmp == "" ? "/" : curTmp);
+        files.clear();
+        //QTimer::singleShot(100, this, SLOT(clearDownFilesWhenCancleDownDir()));
+    }
+}
+
+void FtpWindow::clearDownFilesWhenCancleDownDir() {
+	QMapIterator<int, QFile*> i(files);
+	while (i.hasNext()) {
+		i.next();
+		QFile* file = i.value();
+		file->close();
+		file->remove();
+		delete file;
+	}
+	files.clear();
 }
 
 void FtpWindow::ftpCommandFinished(int id, bool error)
@@ -271,6 +295,9 @@ void FtpWindow::ftpCommandFinished(int id, bool error)
                                  .arg(file->fileName()));
             file->close();
             file->remove();
+			QString dd = currentPath == "" ? "/" : currentPath;
+			bool f = ftp->cd(dd);
+			ftp->list();
 			qDebug() << "Cancle the file success: " << file->fileName();
 		}
 		else {
