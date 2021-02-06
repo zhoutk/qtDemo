@@ -173,6 +173,11 @@ void FtpWindow::connectToFtp()
 //![3]
 void FtpWindow::downloadFile()
 {
+    files.clear();
+    downDirs.clear();
+    downloadBytes = 0;
+    downloadTotalBytes = 0;
+    enterSubDir = false;
 	downFinished = false;
 	//QTimer::singleShot(0, this, SLOT(showProgressDialog()));
 	downAllFile(currentPath);
@@ -244,9 +249,10 @@ void FtpWindow::cancelDownload()
 		connectButton->click();
 		connectButton->click();
         ftp->cd(curTmp == "" ? "/" : curTmp);
-        files.clear();
-        //QTimer::singleShot(100, this, SLOT(clearDownFilesWhenCancleDownDir()));
+        //files.clear();
+        QTimer::singleShot(100, this, SLOT(clearDownFilesWhenCancleDownDir()));
     }
+    enterSubDir = false;
 }
 
 void FtpWindow::clearDownFilesWhenCancleDownDir() {
@@ -259,6 +265,7 @@ void FtpWindow::clearDownFilesWhenCancleDownDir() {
 		delete file;
 	}
 	files.clear();
+    qDebug() << "*********************** clear files.";
 }
 
 void FtpWindow::ftpCommandFinished(int id, bool error)

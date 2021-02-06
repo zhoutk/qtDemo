@@ -69,7 +69,6 @@ public:
     FtpWindow(QWidget *parent = 0);
     QSize sizeHint() const;
 	void downAllFile(QString);
-    void clearDownFilesWhenCancleDownDir();
 
 //![0]
 private slots:
@@ -88,7 +87,8 @@ private slots:
     void enableConnectButton();
 
     void showProgressDialog();
-//![0]
+	void clearDownFilesWhenCancleDownDir();
+	//![0]
 
 private:
     QLabel *ftpServerLabel;
