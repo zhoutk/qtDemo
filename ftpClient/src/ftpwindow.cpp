@@ -338,6 +338,7 @@ void FtpWindow::ftpCommandFinished(int id, bool error)
 void FtpWindow::addToList(const QVector<QUrlInfo>& urlInfos)
 {
     fileList->clear();
+    int dirIndex = 0;
 	for (int i = 0; i < urlInfos.size(); i++)
 	{
 		QTreeWidgetItem* item = new QTreeWidgetItem;
@@ -354,7 +355,12 @@ void FtpWindow::addToList(const QVector<QUrlInfo>& urlInfos)
 			item->setIcon(0, pixmap);
 
 			isDirectory[urlInfo.name()] = urlInfo.isDir();
-			fileList->addTopLevelItem(item);
+            if (urlInfo.isDir()) {
+                fileList->insertTopLevelItem(dirIndex++, item);
+            }
+            else {
+				fileList->addTopLevelItem(item);
+            }
 		}
 	}
 
