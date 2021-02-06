@@ -116,6 +116,7 @@ private:
     QString downloadPath;
     bool downFinished;
     bool enterSubDir;
+    QString currentDownPath;
 
     QStack<QString> downDirs;
 //![1]

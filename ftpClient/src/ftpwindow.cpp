@@ -5,7 +5,7 @@
 FtpWindow::FtpWindow(QWidget* parent)
     : QDialog(parent), ftp(0), networkSession(0), downloadBytes(0),
     downloadTotalBytes(0), downloadTotalFiles(0), downloadPath("c:/temp/ftpdown"),
-    downFinished(true), enterSubDir(false)
+    downFinished(true), enterSubDir(false), currentDownPath("")
 {
     ftpServerLabel = new QLabel(tr("Ftp &server:"));
     ftpServerLineEdit = new QLineEdit("ftp://test:a1b2c3@127.0.0.1:21");
@@ -181,18 +181,19 @@ void FtpWindow::downloadFile()
 }
 
 void FtpWindow::downAllFile(QString rootDir) {
+    QString thisRoot(rootDir + "/");
 	QList<QTreeWidgetItem*> selectedItemList = fileList->selectedItems();
 	for (int i = 0; i < selectedItemList.size(); i++)
 	{
 		QString fileName = selectedItemList[i]->text(0);
         if (isDirectory.value(fileName)) {
             if(fileName != "..")
-                downDirs.push(fileName);
+                downDirs.push(thisRoot + fileName);
         }
         else {
 			downloadTotalBytes += selectedItemList[i]->text(1).toLongLong();
             QString dirTmp(downloadPath);
-            dirTmp.append(currentPath);
+            dirTmp.append(rootDir);
             QDir downDir(dirTmp);
             if (!downDir.exists(dirTmp)) {
                 downDir.mkpath(dirTmp);
@@ -211,13 +212,16 @@ void FtpWindow::downAllFile(QString rootDir) {
 	}
     if (downDirs.size() > 0) {
         enterSubDir = true;
-        QString nextDir("/");
-        nextDir.append(downDirs.pop());
-        fileList->clear();
+        QString nextDir(downDirs.pop());
+        //fileList->clear();
         bool f = ftp->cd(nextDir);
-        //currentPath += '/';
-        currentPath = nextDir;
+        currentDownPath = nextDir;
         ftp->list();
+    }
+    else {
+        enterSubDir = false;
+		bool f = ftp->cd(currentPath == "" ? "/" : currentPath);
+		ftp->list();
     }
 }
 
@@ -305,6 +309,7 @@ void FtpWindow::ftpCommandFinished(int id, bool error)
 //![10]
 void FtpWindow::addToList(const QVector<QUrlInfo>& urlInfos)
 {
+    fileList->clear();
 	for (int i = 0; i < urlInfos.size(); i++)
 	{
 		QTreeWidgetItem* item = new QTreeWidgetItem;
@@ -333,11 +338,11 @@ void FtpWindow::addToList(const QVector<QUrlInfo>& urlInfos)
 	}
 	else {
 		fileList->selectAll();
-		downAllFile(currentPath);
+		downAllFile(currentDownPath);
 		//cdToParent();
-        if (currentPath == "") {
-            enterSubDir = false;
-        }
+        //if (currentPath == currentDownPath) {
+        //    enterSubDir = false;
+        //}
 	}
 }
 //![10]
