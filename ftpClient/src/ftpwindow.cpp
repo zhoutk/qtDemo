@@ -43,8 +43,8 @@ FtpWindow::FtpWindow(QWidget* parent)
     //auto winFlags = windowFlags() & ~Qt::WindowMinMaxButtonsHint;
     //progressDialog->setWindowFlags(winFlags &~ Qt::WindowCloseButtonHint);
     progressDialog->reset();
-    //progressDialog->setAutoClose(false);
-    //progressDialog->setAutoReset(false);
+    progressDialog->setAutoClose(false);
+    progressDialog->setAutoReset(false);
 
     connect(fileList, SIGNAL(itemActivated(QTreeWidgetItem*,int)),
             this, SLOT(processItem(QTreeWidgetItem*,int)));
