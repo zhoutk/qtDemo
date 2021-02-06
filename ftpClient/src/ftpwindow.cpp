@@ -18,6 +18,7 @@ FtpWindow::FtpWindow(QWidget* parent)
     fileList->setRootIsDecorated(false);
     fileList->setSelectionMode(QAbstractItemView::ExtendedSelection);
     fileList->setHeaderLabels(QStringList() << tr("Name") << tr("Size") << tr("IsDir") << tr("Owner") << tr("Group") << tr("Time"));
+    fileList->setColumnWidth(0, 200);
     fileList->header()->setStretchLastSection(false);
 
     connectButton = new QPushButton(tr("Connect"));
@@ -287,8 +288,9 @@ void FtpWindow::ftpCommandFinished(int id, bool error)
 			qDebug() << "Cancle the file success: " << file->fileName();
 		}
 		else {
-            statusLabel->setText(tr("Downloaded %1 success.")
-                                 .arg(file->fileName()));
+            QStringList fileInfo = file->fileName().split("/");
+            statusLabel->setText(tr("Download success, filename : %1")
+                                 .arg(fileInfo[fileInfo.size() - 1]));
             file->close();
 			qDebug() << "Download the file success: " << file->fileName();
 		}
