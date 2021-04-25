@@ -1,0 +1,20 @@
+#ifndef CUSTOMGRAPHITEMTYPE_H
+#define CUSTOMGRAPHITEMTYPE_H
+
+#include <QGraphicsItem>
+
+enum SEGuiItemType {
+    UserType = QGraphicsItem::UserType,		// 占位，不要使用
+
+	POINTTYPE = 65555,
+	LINETYPE,
+	RECTANGLETYPE = 66660,
+	POLYGONTYPE,
+	SECTORTYPE,
+	CIRCLETYPE,
+	POLYLINETYPE,
+	ARCLINETYPE,
+
+};
+
+#endif // CUSTOMGRAPHITEMTYPE_H
