@@ -4,7 +4,7 @@ CustomGraphLine::CustomGraphLine(CustomGraphPoint prevNode, CustomGraphPoint nex
 {
 	this->prevNode = prevNode;
 	this->nextNode = nextNode;
-	this->options = Rjson();
+	this->options = Qjson();
 	this->lineWidth = 1;
 	this->colorValue = 0;
 	this->fillStyle = 0;
@@ -12,26 +12,26 @@ CustomGraphLine::CustomGraphLine(CustomGraphPoint prevNode, CustomGraphPoint nex
 	setFlag(ItemIsMovable);
 }
 
-CustomGraphLine::CustomGraphLine(CustomGraphPoint prevNode, CustomGraphPoint nextNode, Rjson options) {
+CustomGraphLine::CustomGraphLine(CustomGraphPoint prevNode, CustomGraphPoint nextNode, Qjson options) {
 	new (this)CustomGraphLine(prevNode, nextNode);
 	this->options = options;
 	if (options.IsObject()) {
-		QString lwidth = QString::fromStdString(options["lineWidth"]);
+		QString lwidth = options["lineWidth"];
 		if (!lwidth.isEmpty()) {
 			lineWidth = lwidth.toInt();
 		}
 
-		QString color = QString::fromStdString(options["colorValue"]);
+		QString color = options["colorValue"];
 		if (!color.isEmpty()) {
 			colorValue = color.toInt();
 		}
 
-		QString fstyle = QString::fromStdString(options["fillStyle"]);
+		QString fstyle = options["fillStyle"];
 		if (!fstyle.isEmpty()) {
 			this->fillStyle = fstyle.toInt();
 		}
 
-		QString idstr = QString::fromStdString(options["id"]);
+		QString idstr = options["id"];
 		if (!idstr.isEmpty()) {
 			id = idstr;
 		}
@@ -74,9 +74,9 @@ void CustomGraphLine::paint(QPainter* painter, const QStyleOptionGraphicsItem* o
 	painter->drawLine(QLineF(QPoint(0, 0), nextNode.scenePos() - prevNode.scenePos()));
 }
 
-Rjson CustomGraphLine::getFactors()
+Qjson CustomGraphLine::getFactors()
 {
-	return Rjson();
+	return Qjson();
 }
 
 void CustomGraphLine::relocate()

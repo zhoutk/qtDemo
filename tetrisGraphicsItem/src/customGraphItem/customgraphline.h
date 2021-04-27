@@ -4,7 +4,7 @@
 #include "customgraphbase.h"
 #include <QPainter>
 #include "customgraphitemtype.h"
-#include "../common/Rjson.h"
+#include "../common/Qjson.h"
 #include "../common/utils.h"
 #include "customgraphpoint.h"
 
@@ -15,7 +15,7 @@ class CustomGraphLine : public CustomGraphBase
 	};
 public:
 	CustomGraphLine(CustomGraphPoint prevNode, CustomGraphPoint nextNode);
-	CustomGraphLine(CustomGraphPoint prevNode, CustomGraphPoint nextNode, Rjson options);
+	CustomGraphLine(CustomGraphPoint prevNode, CustomGraphPoint nextNode, Qjson options);
 
 	CustomGraphLine(const CustomGraphLine& origin);
 	CustomGraphLine& operator = (const CustomGraphLine& origin);
@@ -27,12 +27,12 @@ public:
 	void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,QWidget *widget);
 	void relocate();
 	int type() const;
-	Rjson getFactors();
+	Qjson getFactors();
 
 private:
 	CustomGraphPoint prevNode;
 	CustomGraphPoint nextNode;
-	Rjson options;
+	Qjson options;
 
 	int lineWidth;
 	int colorValue;

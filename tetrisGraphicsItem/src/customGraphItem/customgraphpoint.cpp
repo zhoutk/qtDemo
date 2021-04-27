@@ -2,7 +2,7 @@
 
 CustomGraphPoint::CustomGraphPoint(QPointF localtion) {
 	this->localtion = localtion;
-	this->options = Rjson();
+	this->options = Qjson();
 	this->pointRadius = 4;
 	this->lineWidth = 1;
 	this->colorValue = 0;
@@ -16,33 +16,33 @@ CustomGraphPoint::CustomGraphPoint(double lon, double lat)
 	new (this)CustomGraphPoint(QPointF(lon, lat));		
 }
 
-CustomGraphPoint::CustomGraphPoint(QPointF localtion, Rjson options){
+CustomGraphPoint::CustomGraphPoint(QPointF localtion, Qjson options){
 	new (this)CustomGraphPoint(localtion);
 	this->options = options;
 	if (options.IsObject()) {
-		QString lwidth = QString::fromStdString(options["lineWidth"]);
+		QString lwidth = options["lineWidth"];
 		if (!lwidth.isEmpty()) {
 			this->lineWidth = lwidth.toInt();
 		}
 
-		QString color = QString::fromStdString(options["colorValue"]);
+		QString color = options["colorValue"];
 		if (!color.isEmpty()) {
 			this->colorValue = color.toInt();
 		}
 
-		QString fstyle = QString::fromStdString(options["fillStyle"]);
+		QString fstyle = options["fillStyle"];
 		if (!fstyle.isEmpty()) {
 			this->fillStyle = fstyle.toInt();
 		}
 
-		QString idstr = QString::fromStdString(options["id"]);
+		QString idstr = options["id"];
 		if (!idstr.isEmpty()) {
 			id = idstr;
 		}
 	}
 }
 
-CustomGraphPoint::CustomGraphPoint(double lat, double lon, Rjson options)
+CustomGraphPoint::CustomGraphPoint(double lat, double lon, Qjson options)
 {
 	new (this)CustomGraphPoint(QPointF(lon, lat), options);
 }
@@ -62,13 +62,13 @@ int CustomGraphPoint::type() const
 	return Type;
 }
 
-Rjson CustomGraphPoint::getFactors()
+Qjson CustomGraphPoint::getFactors()
 {
-	Rjson factor;
-	factor.AddValueFloat("lon", localtion.x());
-	factor.AddValueFloat("lat", localtion.y());
-	factor.AddValueFloat("coordx", coordinate.x());
-	factor.AddValueFloat("coordy", coordinate.y());
+	Qjson factor;
+	factor.AddValueBase("lon", localtion.x());
+	factor.AddValueBase("lat", localtion.y());
+	factor.AddValueBase("coordx", coordinate.x());
+	factor.AddValueBase("coordy", coordinate.y());
 	return factor;
 }
 

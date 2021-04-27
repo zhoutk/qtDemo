@@ -3,7 +3,7 @@
 
 #include <QObject>
 #include <QGraphicsObject>
-#include "../common/Rjson.h"
+#include "../common/Qjson.h"
 #include "../common/snowflake.h"
 
 extern SnowFlake snowFlakeId;
@@ -27,7 +27,7 @@ public:
 	virtual QRectF boundingRect() const = 0;
 	virtual void relocate() = 0;
 	virtual int type() const = 0;
-	virtual Rjson getFactors() = 0;
+	virtual Qjson getFactors() = 0;
 };
 
 #endif // CUSTOMGRAPHBASE_H
