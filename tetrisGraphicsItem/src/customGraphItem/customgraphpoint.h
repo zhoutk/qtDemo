@@ -33,10 +33,6 @@ private:
 	QPoint coordinate;
 	Qjson options;
 	int pointRadius;
-	
-	int lineWidth;
-	int colorValue;
-	int fillStyle;
 };
 
 #endif // CUSTOMGRAPHPOINT_H

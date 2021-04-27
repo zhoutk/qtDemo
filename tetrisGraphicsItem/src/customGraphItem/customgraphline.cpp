@@ -5,10 +5,6 @@ CustomGraphLine::CustomGraphLine(CustomGraphPoint prevNode, CustomGraphPoint nex
 	this->prevNode = prevNode;
 	this->nextNode = nextNode;
 	this->options = Qjson();
-	this->lineWidth = 1;
-	this->colorValue = 0;
-	this->fillStyle = 0;
-	setFlag(ItemIsMovable);
 }
 
 CustomGraphLine::CustomGraphLine(CustomGraphPoint prevNode, CustomGraphPoint nextNode, Qjson options) {

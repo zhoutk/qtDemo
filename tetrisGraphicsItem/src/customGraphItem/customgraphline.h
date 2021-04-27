@@ -32,10 +32,6 @@ private:
 	CustomGraphPoint prevNode;
 	CustomGraphPoint nextNode;
 	Qjson options;
-
-	int lineWidth;
-	int colorValue;
-	int fillStyle;
 };
 
 #endif // CUSTOMGRAPHLINE_H

@@ -22,6 +22,10 @@ public:
 
 protected:
 	QString id;
+	int lineStyle;
+	int lineWidth;
+	int colorValue;
+	int fillStyle;
 
 public:
 	virtual QRectF boundingRect() const = 0;

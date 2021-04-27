@@ -4,10 +4,6 @@ CustomGraphPoint::CustomGraphPoint(QPointF localtion) {
 	this->localtion = localtion;
 	this->options = Qjson();
 	this->pointRadius = 4;
-	this->lineWidth = 1;
-	this->colorValue = 0;
-	this->fillStyle = 0;
-	setFlag(ItemIsMovable);
 }
 
 CustomGraphPoint::CustomGraphPoint(double lon, double lat)

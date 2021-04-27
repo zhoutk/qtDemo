@@ -9,6 +9,36 @@ class Utils
 public:
 	Utils() {};
 
+	static Qt::PenStyle getLineStyleFromIndex(int index) {
+		switch (index)
+		{
+		case 0:
+			return Qt::SolidLine;
+			break;
+		case 1:
+			return Qt::DashLine;
+			break;
+		case 2:
+			return Qt::DotLine;
+			break;
+		case 3:
+			return Qt::DashDotLine;
+			break;
+		case 4:
+			return Qt::DashDotDotLine;
+			break;
+		case 5:
+			return Qt::CustomDashLine;
+			break;
+		case 9:
+			return Qt::NoPen;
+			break;
+		default:
+			return Qt::SolidLine;
+			break;
+		}
+	}
+
 	static Qt::GlobalColor getColorValueFromIndex(int index) {
 		switch (index)
 		{
@@ -35,6 +65,9 @@ public:
 			break;
 		case 9:
 			return Qt::darkCyan;
+			break;
+		case 10:
+			return Qt::darkYellow;
 			break;
 		default:
 			return Qt::red;
