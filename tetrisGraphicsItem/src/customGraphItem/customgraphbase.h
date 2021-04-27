@@ -16,7 +16,7 @@ public:
 	CustomGraphBase(QString id);
 	~CustomGraphBase();
 
-	QString getGraphItemId() {
+	QString getID() {
 		return id;
 	}
 
@@ -25,7 +25,6 @@ protected:
 
 public:
 	virtual QRectF boundingRect() const = 0;
-	virtual void relocate() = 0;
 	virtual int type() const = 0;
 	virtual Qjson getFactors() = 0;
 };

@@ -7,7 +7,6 @@ CustomGraphPoint::CustomGraphPoint(QPointF localtion) {
 	this->lineWidth = 1;
 	this->colorValue = 0;
 	this->fillStyle = 0;
-	this->relocate();
 	setFlag(ItemIsMovable);
 }
 
@@ -82,10 +81,6 @@ void CustomGraphPoint::paint(QPainter *painter, const QStyleOptionGraphicsItem *
 	QBrush brushRef(Utils::getColorValueFromIndex(colorValue));
 	painter->setPen(QPen(brushRef, lineWidth));
 	painter->drawEllipse(-pointRadius, -pointRadius, static_cast<qint64>(pointRadius) * 2, static_cast<qint64>(pointRadius) * 2);
-}
-
-void CustomGraphPoint::relocate()
-{
 }
 
 CustomGraphPoint::~CustomGraphPoint()

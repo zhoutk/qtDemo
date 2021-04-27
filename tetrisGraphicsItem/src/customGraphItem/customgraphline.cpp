@@ -8,7 +8,6 @@ CustomGraphLine::CustomGraphLine(CustomGraphPoint prevNode, CustomGraphPoint nex
 	this->lineWidth = 1;
 	this->colorValue = 0;
 	this->fillStyle = 0;
-	this->relocate();
 	setFlag(ItemIsMovable);
 }
 
@@ -69,24 +68,12 @@ void CustomGraphLine::paint(QPainter* painter, const QStyleOptionGraphicsItem* o
 {
 	QBrush brushRef(Utils::getColorValueFromIndex(colorValue));
 	painter->setPen(QPen(brushRef, lineWidth));
-	prevNode.relocate();
-	nextNode.relocate();
 	painter->drawLine(QLineF(QPoint(0, 0), nextNode.scenePos() - prevNode.scenePos()));
 }
 
 Qjson CustomGraphLine::getFactors()
 {
 	return Qjson();
-}
-
-void CustomGraphLine::relocate()
-{
-	prevNode.relocate();
-	if (scenePos() != prevNode.scenePos()) 
-	{
-		setPos(prevNode.scenePos());
-	}
-	//prepareGeometryChange();
 }
 
 CustomGraphLine::~CustomGraphLine()
