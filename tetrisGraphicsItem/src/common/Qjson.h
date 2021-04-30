@@ -37,7 +37,7 @@ public:
 	}
 
 	Qjson(QString jstr) {
-		new (this)Qjson((QByteArray)jstr.toUtf8());
+		new (this)Qjson(jstr.toUtf8());
 	}
 
 	Qjson(const Qjson& origin) {
