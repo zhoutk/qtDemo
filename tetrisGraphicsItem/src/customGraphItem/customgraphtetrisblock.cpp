@@ -1,24 +1,29 @@
 #include "customgraphtetrisblock.h"
 
-CustomGraphTetrisBlock::CustomGraphTetrisBlock():pos(QPoint(0,0)), sideLen(4), data(QVector<bool>(sideLen*sideLen)),blockType(0)
+const int BLOCKSIDELENGTH = 4;
+const int BLOCKDATASIZE = 16;
+
+CustomGraphTetrisBlock::CustomGraphTetrisBlock() :
+	pos(QPoint(0,0)), 
+	sideLen(BLOCKSIDELENGTH), 
+	data(QVector<bool>(BLOCKDATASIZE)),
+	blockType(0)
 {
-	foreach (auto al, data)
-		al = false;
 }
 
-CustomGraphTetrisBlock::CustomGraphTetrisBlock(QPoint pos): pos(pos)
+CustomGraphTetrisBlock::CustomGraphTetrisBlock(QPoint pos)
 {
 	new (this)CustomGraphTetrisBlock();
 	this->pos = pos;
 }
 
-CustomGraphTetrisBlock::CustomGraphTetrisBlock(QPoint pos, int blockType) : pos(pos), blockType(blockType)
+CustomGraphTetrisBlock::CustomGraphTetrisBlock(QPoint pos, int blockType)
 {
 	new (this)CustomGraphTetrisBlock(pos);
 	this->blockType = blockType;
 }
 
-CustomGraphTetrisBlock::CustomGraphTetrisBlock(int blockType): blockType(blockType)
+CustomGraphTetrisBlock::CustomGraphTetrisBlock(int blockType)
 {
 	new (this)CustomGraphTetrisBlock();
 	this->blockType = blockType;

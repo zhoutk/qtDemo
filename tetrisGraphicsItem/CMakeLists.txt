@@ -38,7 +38,7 @@ FILE(GLOB_RECURSE UI_FILES "./src/*.ui")
 
 source_group("Head Files" FILES ${HEAD_FILES} )
 source_group("Form Files" FILES ${UI_FILES} )
-# source_group("Src Files" FILES ${SRC_FILES} )
+source_group("Src Files" FILES ${SRC_FILES} )
 
 add_executable(${PROJECT_NAME} ${SRC_FILES} ${HEAD_FILES} ${UI_FILES})
 
