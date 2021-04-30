@@ -61,7 +61,12 @@ Qjson CustomGraphTetrisBlock::getFactors()
 
 void CustomGraphTetrisBlock::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget /*= nullptr*/)
 {
-	;
+	for (int i = 0; i < BLOCKDATASIZE; i++) {
+		if (data[i])
+		{
+			painter->drawRoundedRect(pos.x() + (i % sideLen) * BLOCKSIDELENGTH, pos.y() + (int)(i / sideLen) * BLOCKSIDELENGTH, BLOCKSIDELENGTH, BLOCKSIDELENGTH, 2, 2);
+		}
+	}
 }
 
 void CustomGraphTetrisBlock::relocate()
