@@ -9,6 +9,7 @@ CustomGraphTetrisBlock::CustomGraphTetrisBlock() :
 	data(QVector<bool>(BLOCKDATASIZE)),
 	blockType(0)
 {
+	this->relocate();
 }
 
 CustomGraphTetrisBlock::CustomGraphTetrisBlock(QPoint pos)
@@ -46,7 +47,7 @@ CustomGraphTetrisBlock::CustomGraphTetrisBlock(QPoint pos, int blockType)
 
 QRectF CustomGraphTetrisBlock::boundingRect() const
 {
-	return QRectF(0,0,0,0);
+	return QRectF(0,0,BLOCKSIDELENGTH * 30, BLOCKSIDELENGTH * 30);
 }
 
 int CustomGraphTetrisBlock::type() const
@@ -64,7 +65,7 @@ void CustomGraphTetrisBlock::paint(QPainter* painter, const QStyleOptionGraphics
 	for (int i = 0; i < BLOCKDATASIZE; i++) {
 		if (data[i])
 		{
-			painter->drawRoundedRect(pos.x() + (i % sideLen) * BLOCKSIDELENGTH, pos.y() + (int)(i / sideLen) * BLOCKSIDELENGTH, BLOCKSIDELENGTH, BLOCKSIDELENGTH, 2, 2);
+			painter->drawRoundedRect(pos.x() + (i % sideLen) * 30, pos.y() + (int)(i / sideLen) * 30, 30, 30, 2, 2);
 		}
 	}
 }
