@@ -1,7 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QDesktopWidget>
-#include "customGraphItem/customgraphtetrisblock.h"
 #include "tetrisview.h"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -11,13 +10,13 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
 	MainScene = new QGraphicsScene(this);
-	MainScene->setSceneRect(0, 0, this->geometry().width(), this->geometry().height());
-	TetrisView* view = new TetrisView;
+	MainScene->setSceneRect(0, 0, 440/*this->geometry().width()*/, this->geometry().height());
+	TetrisView* view = new TetrisView(this->centralWidget());
 	view->setScene(MainScene);
 
-	this->setCentralWidget(view);
+	//this->setCentralWidget(view);
 
-    CustomGraphTetrisBlock * block = new CustomGraphTetrisBlock(QPoint(100,100), 333);
+    block = new CustomGraphTetrisBlock(QPoint(100,100), 5);
 	MainScene->addItem(block);
 }
 
@@ -25,5 +24,17 @@ MainWindow::~MainWindow()
 {
     delete ui;
 	delete MainScene;
+}
+
+void MainWindow::on_pushButton1_clicked()
+{
+	block->relocate(QPoint(0,0));
+	MainScene->update();
+}
+
+void MainWindow::on_pushButton2_clicked()
+{
+	block->relocate(QPoint(100, 100));
+	MainScene->update();
 }
 

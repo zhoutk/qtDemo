@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QGraphicsScene>
+#include "customGraphItem/customgraphtetrisblock.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -16,8 +17,13 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+public slots:
+	void on_pushButton1_clicked();
+	void on_pushButton2_clicked();
+
 private:
     Ui::MainWindow *ui;
     QGraphicsScene* MainScene;
+    CustomGraphTetrisBlock* block;
 };
 #endif // MAINWINDOW_H

@@ -19,6 +19,7 @@ CustomGraphTetrisBlock::CustomGraphTetrisBlock(QPoint pos)
 {
 	new (this)CustomGraphTetrisBlock();
 	this->pos = pos;
+	this->relocate();
 }
 
 CustomGraphTetrisBlock::CustomGraphTetrisBlock(int blockType)
@@ -36,6 +37,7 @@ CustomGraphTetrisBlock::CustomGraphTetrisBlock(QPoint pos, int blockType)
 {
 	new (this)CustomGraphTetrisBlock(blockType);
 	this->pos = pos;
+	this->relocate();
 	this->blockType = blockType;
 }
 
@@ -68,4 +70,10 @@ void CustomGraphTetrisBlock::paint(QPainter* painter, const QStyleOptionGraphics
 void CustomGraphTetrisBlock::relocate()
 {
 	this->setPos(pos);
+}
+
+void CustomGraphTetrisBlock::relocate(QPoint p)
+{
+	this->pos = p;
+	this->relocate();
 }

@@ -22,6 +22,7 @@ public:
 	QRectF boundingRect() const override;
 	int type() const override;
 	void relocate() override;
+	void relocate(QPoint);
 	Qjson getFactors() override;
 
 	void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
