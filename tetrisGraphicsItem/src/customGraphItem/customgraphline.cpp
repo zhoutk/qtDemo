@@ -75,3 +75,13 @@ Qjson CustomGraphLine::getFactors()
 CustomGraphLine::~CustomGraphLine()
 {
 }
+
+void CustomGraphLine::relocate()
+{
+	nextNode.relocate();
+	prevNode.relocate();
+	if (scenePos() != prevNode.scenePos())
+	{
+		setPos(prevNode.scenePos());
+	}
+}

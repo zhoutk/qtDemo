@@ -26,6 +26,7 @@ public:
 	QRectF boundingRect() const;
 	void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,QWidget *widget);
 	int type() const;
+	void relocate() override;
 	Qjson getFactors();
 
 private:

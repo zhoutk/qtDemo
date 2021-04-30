@@ -4,6 +4,7 @@ CustomGraphPoint::CustomGraphPoint(QPointF localtion) {
 	this->localtion = localtion;
 	this->options = Qjson();
 	this->pointRadius = 4;
+	this->relocate();
 }
 
 CustomGraphPoint::CustomGraphPoint(double lon, double lat)
@@ -60,10 +61,8 @@ int CustomGraphPoint::type() const
 Qjson CustomGraphPoint::getFactors()
 {
 	Qjson factor;
-	factor.AddValueBase("lon", localtion.x());
-	factor.AddValueBase("lat", localtion.y());
-	factor.AddValueBase("coordx", coordinate.x());
-	factor.AddValueBase("coordy", coordinate.y());
+	factor.AddValueBase("x", localtion.x());
+	factor.AddValueBase("y", localtion.y());
 	return factor;
 }
 
@@ -82,4 +81,9 @@ void CustomGraphPoint::paint(QPainter *painter, const QStyleOptionGraphicsItem *
 CustomGraphPoint::~CustomGraphPoint()
 {
 
+}
+
+void CustomGraphPoint::relocate()
+{
+	this->setPos(localtion.x(), localtion.y());
 }

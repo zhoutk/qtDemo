@@ -8,7 +8,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    CustomGraphTetrisBlock * block = new CustomGraphTetrisBlock(QPoint(1,1));
+    CustomGraphTetrisBlock * block = new CustomGraphTetrisBlock(0);
 }
 
 MainWindow::~MainWindow()

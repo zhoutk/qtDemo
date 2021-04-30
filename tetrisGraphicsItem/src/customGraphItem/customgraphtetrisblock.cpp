@@ -1,7 +1,7 @@
 #include "customgraphtetrisblock.h"
 
 const int BLOCKSIDELENGTH = 4;
-const int BLOCKDATASIZE = 16;
+const int BLOCKDATASIZE = BLOCKSIDELENGTH * BLOCKSIDELENGTH;
 
 CustomGraphTetrisBlock::CustomGraphTetrisBlock() :
 	pos(QPoint(0,0)), 
@@ -17,15 +17,30 @@ CustomGraphTetrisBlock::CustomGraphTetrisBlock(QPoint pos)
 	this->pos = pos;
 }
 
-CustomGraphTetrisBlock::CustomGraphTetrisBlock(QPoint pos, int blockType)
-{
-	new (this)CustomGraphTetrisBlock(pos);
-	this->blockType = blockType;
-}
-
 CustomGraphTetrisBlock::CustomGraphTetrisBlock(int blockType)
 {
 	new (this)CustomGraphTetrisBlock();
+	this->blockType = blockType;
+	switch (blockType)
+	{
+	case 0: {
+		for (int i = 0; i < BLOCKDATASIZE; i++) {
+			if (i >= 2 * BLOCKSIDELENGTH && i < 3 * BLOCKSIDELENGTH)
+				data[i] = true;
+			else
+				data[i] = false;
+		}
+		break;
+	}
+	default:
+		break;
+	}
+}
+
+CustomGraphTetrisBlock::CustomGraphTetrisBlock(QPoint pos, int blockType)
+{
+	new (this)CustomGraphTetrisBlock(blockType);
+	this->pos = pos;
 	this->blockType = blockType;
 }
 
@@ -47,4 +62,9 @@ Qjson CustomGraphTetrisBlock::getFactors()
 void CustomGraphTetrisBlock::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget /*= nullptr*/)
 {
 	;
+}
+
+void CustomGraphTetrisBlock::relocate()
+{
+	this->setPos(pos);
 }

@@ -22,15 +22,16 @@ public:
 	CustomGraphPoint& operator = (const CustomGraphPoint& origin);
 	~CustomGraphPoint();
 
+
 public:
 	QRectF boundingRect() const;
 	void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,QWidget *widget);
 	int type() const;
+	void relocate() override;
 	Qjson getFactors();
 
 private:
 	QPointF localtion;
-	QPoint coordinate;
 	Qjson options;
 	int pointRadius;
 };
