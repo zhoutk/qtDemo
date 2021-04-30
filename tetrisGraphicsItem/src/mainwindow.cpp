@@ -17,7 +17,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 	this->setCentralWidget(view);
 
-    CustomGraphTetrisBlock * block = new CustomGraphTetrisBlock(QPoint(100,100), 0);
+    CustomGraphTetrisBlock * block = new CustomGraphTetrisBlock(QPoint(100,100), 333);
 	MainScene->addItem(block);
 }
 
