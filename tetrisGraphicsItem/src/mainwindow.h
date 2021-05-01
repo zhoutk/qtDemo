@@ -20,10 +20,13 @@ public:
 public slots:
 	void on_pushButton1_clicked();
 	void on_pushButton2_clicked();
+	void on_pushButton3_clicked();
 
 private:
     Ui::MainWindow *ui;
     QGraphicsScene* MainScene;
     CustomGraphTetrisBlock* block;
+
+    int index;
 };
 #endif // MAINWINDOW_H
