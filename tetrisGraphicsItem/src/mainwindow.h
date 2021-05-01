@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QGraphicsScene>
 #include "customGraphItem/customgraphtetrisblock.h"
+#include "tetrisview.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -25,8 +26,11 @@ public slots:
 private:
     Ui::MainWindow *ui;
     QGraphicsScene* MainScene;
-    CustomGraphTetrisBlock* block;
+	CustomGraphTetrisBlock* block;
+	CustomGraphTetrisBlock* blockNext;
 
     int index;
+	TetrisView* gameView;
+	TetrisView* blockView;
 };
 #endif // MAINWINDOW_H
