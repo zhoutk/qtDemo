@@ -5,7 +5,7 @@ const int BLOCKSIDELENGTH = 4;
 const int BLOCKDATASIZE = BLOCKSIDELENGTH * BLOCKSIDELENGTH;
 QVector<QVector<int>> SHAPES = {
 	{1, 1, 1, 1},
-	{1, 1, 1, 0, 1},
+	{0, 1, 1, 1, 0 , 1},
 	{1, 1, 1, 0, 0, 0, 1},
 	{0, 1, 1, 0, 0, 1, 1},
 	{1, 1, 0, 0, 0, 1, 1},
@@ -37,7 +37,7 @@ CustomGraphTetrisBlock::CustomGraphTetrisBlock(int blockType)
 	QVector<int> shape = SHAPES[blockType % SHAPES.size()];
 	for (int i = 0; i < shape.size(); i++) {
 		if (shape[i])
-			data[i % sideLen][1 + i / sideLen] = true;
+			data[1 + i / sideLen][i % sideLen] = true;
 	}
 }
 
@@ -76,8 +76,8 @@ void CustomGraphTetrisBlock::paint(QPainter* painter, const QStyleOptionGraphics
 		if (data[i][j])
 		{
 			painter->drawRoundedRect(
-				i * BLOCKSIDEWIDTH, 
 				j * BLOCKSIDEWIDTH, 
+				i * BLOCKSIDEWIDTH, 
 				BLOCKSIDEWIDTH, 
 				BLOCKSIDEWIDTH, 
 				2, 2
@@ -89,18 +89,19 @@ void CustomGraphTetrisBlock::paint(QPainter* painter, const QStyleOptionGraphics
 
 bool CustomGraphTetrisBlock::rotate()
 {
-	//int t;
-	//for (int i = 0; i < BLOCKSIDELENGTH / 2; i++)
-	//{
-	//	for (int j = i; j < BLOCKSIDELENGTH - i ; j++)
-	//	{
-	//		t = data[i * BLOCKSIDELENGTH + j];
-	//		data[i * BLOCKSIDELENGTH + j] = data[(BLOCKSIDELENGTH - j - 1) * BLOCKSIDELENGTH +i];
-	//		data[(BLOCKSIDELENGTH - j - 1) * BLOCKSIDELENGTH + i] = data[(BLOCKSIDELENGTH - i - 1) * BLOCKSIDELENGTH + BLOCKSIDELENGTH - j - 1];
-	//		data[(BLOCKSIDELENGTH - i - 1) * BLOCKSIDELENGTH + BLOCKSIDELENGTH - j - 1] = data[j * BLOCKSIDELENGTH + BLOCKSIDELENGTH - i - 1];
-	//		data[j * BLOCKSIDELENGTH + BLOCKSIDELENGTH - i - 1] = t;
-	//	}
-	//}
+	int i, j, t, lenI = sideLen / 2, lenJ;
+	for (i = 0; i < lenI; i++)
+	{
+		lenJ = sideLen - i - 1;
+		for (j = i; j < lenJ; j++)
+		{
+			t = data[i][j];
+			data[i][j] = data[sideLen - j - 1][i];
+			data[sideLen - j - 1][i] = data[sideLen - i -1][sideLen - j - 1];
+			data[sideLen - i - 1][sideLen - j - 1] = data[j][sideLen - i - 1];
+			data[j][sideLen - i - 1] = t;
+		}
+	}
 	return true;
 }
 
