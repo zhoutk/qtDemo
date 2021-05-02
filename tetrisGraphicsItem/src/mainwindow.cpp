@@ -40,8 +40,8 @@ MainWindow::MainWindow(QWidget *parent)
 	centerView->setLayout(mainLayout);
 	this->setCentralWidget(centerView);
 
-	block = new CustomGraphTetrisBlock(curPos, 6);
-	blockNext = new CustomGraphTetrisBlock(QPoint(320, 0), 0);
+	block = new CustomGraphTetrisBlock(curPos, 0);
+	blockNext = new CustomGraphTetrisBlock(QPoint(320, 0), 2);
 	MainScene->addItem(block);
 	MainScene->addItem(blockNext);
 }
@@ -78,8 +78,6 @@ void MainWindow::on_pushButton4_clicked()
 
 void MainWindow::on_pushButton5_clicked()
 {
-	QPointF centerPos = block->boundingRect().center();
-	block->setTransformOriginPoint(centerPos.x(), centerPos.y());
-	block->setRotation(90 * index++ % 360);		//* index++ % 360
+	blockNext->rotate();
 }
 

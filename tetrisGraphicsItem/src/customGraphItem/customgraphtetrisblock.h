@@ -27,10 +27,12 @@ public:
 
 	void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
 
+	bool rotate();
+
 private:
 	QPoint pos;
 	int blockType;
-	QVector<bool> data;
+	QVector<QVector<int>> data;
 	int sideLen;
 };
 

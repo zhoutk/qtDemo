@@ -1,5 +1,4 @@
 #include "customgraphtetrisblock.h"
-#include <QList>
 
 const int BLOCKSIDEWIDTH = 30;
 const int BLOCKSIDELENGTH = 4;
@@ -17,9 +16,10 @@ QVector<QVector<int>> SHAPES = {
 CustomGraphTetrisBlock::CustomGraphTetrisBlock() :
 	pos(QPoint(0,0)), 
 	sideLen(BLOCKSIDELENGTH), 
-	data(QVector<bool>(BLOCKDATASIZE)),
 	blockType(0)
 {
+	for (int i = 0; i < sideLen; i++) 
+		data.push_back(QVector<int>(sideLen));
 	this->relocate();
 }
 
@@ -37,7 +37,7 @@ CustomGraphTetrisBlock::CustomGraphTetrisBlock(int blockType)
 	QVector<int> shape = SHAPES[blockType % SHAPES.size()];
 	for (int i = 0; i < shape.size(); i++) {
 		if (shape[i])
-			data[i] = true;
+			data[i % sideLen][1 + i / sideLen] = true;
 	}
 }
 
@@ -71,12 +71,13 @@ Qjson CustomGraphTetrisBlock::getFactors()
 
 void CustomGraphTetrisBlock::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget /*= nullptr*/)
 {
-	for (int i = 0; i < BLOCKDATASIZE; i++) {
-		if (data[i])
+	for (int i = 0; i < sideLen; i++)
+	for(int j = 0; j < sideLen; j++){
+		if (data[i][j])
 		{
 			painter->drawRoundedRect(
-				(i % sideLen) * BLOCKSIDEWIDTH, 
-				(int)(i / sideLen) * BLOCKSIDEWIDTH, 
+				i * BLOCKSIDEWIDTH, 
+				j * BLOCKSIDEWIDTH, 
 				BLOCKSIDEWIDTH, 
 				BLOCKSIDEWIDTH, 
 				2, 2
@@ -84,6 +85,23 @@ void CustomGraphTetrisBlock::paint(QPainter* painter, const QStyleOptionGraphics
 		}
 	}
 	prepareGeometryChange();
+}
+
+bool CustomGraphTetrisBlock::rotate()
+{
+	//int t;
+	//for (int i = 0; i < BLOCKSIDELENGTH / 2; i++)
+	//{
+	//	for (int j = i; j < BLOCKSIDELENGTH - i ; j++)
+	//	{
+	//		t = data[i * BLOCKSIDELENGTH + j];
+	//		data[i * BLOCKSIDELENGTH + j] = data[(BLOCKSIDELENGTH - j - 1) * BLOCKSIDELENGTH +i];
+	//		data[(BLOCKSIDELENGTH - j - 1) * BLOCKSIDELENGTH + i] = data[(BLOCKSIDELENGTH - i - 1) * BLOCKSIDELENGTH + BLOCKSIDELENGTH - j - 1];
+	//		data[(BLOCKSIDELENGTH - i - 1) * BLOCKSIDELENGTH + BLOCKSIDELENGTH - j - 1] = data[j * BLOCKSIDELENGTH + BLOCKSIDELENGTH - i - 1];
+	//		data[j * BLOCKSIDELENGTH + BLOCKSIDELENGTH - i - 1] = t;
+	//	}
+	//}
+	return true;
 }
 
 void CustomGraphTetrisBlock::relocate()
