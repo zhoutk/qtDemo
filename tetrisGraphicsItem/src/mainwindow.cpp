@@ -79,5 +79,6 @@ void MainWindow::on_pushButton4_clicked()
 void MainWindow::on_pushButton5_clicked()
 {
 	blockNext->rotate();
+	block->rotate();
 }
 
