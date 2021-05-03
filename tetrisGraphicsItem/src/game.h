@@ -2,12 +2,16 @@
 #define GAME_H
 
 #include <QObject>
+#include "gamespace.h"
 
-class game : public QObject
+class Game : public QObject
 {
     Q_OBJECT
 public:
-    game();
+    Game();
+
+private:
+    //gameSpace space;
 };
 
 #endif // GAME_H

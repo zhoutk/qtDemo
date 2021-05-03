@@ -2,12 +2,16 @@
 #define GAMESPACE_H
 
 #include <QObject>
+#include "QGraphicsScene"
 
-class gameSpace : public QObject
+class GameSpace : public QObject
 {
     Q_OBJECT
 public:
-    gameSpace();
+    GameSpace();
+
+private:
+    QGraphicsScene* scene;
 };
 
 #endif // GAMESPACE_H

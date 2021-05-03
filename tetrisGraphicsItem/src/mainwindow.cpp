@@ -4,6 +4,16 @@
 #include <QHBoxLayout>
 #include <QSizePolicy>
 #include <QSpacerItem>
+#include "game.h"
+
+MainWindow* MainWindow::APP = nullptr;
+
+MainWindow* MainWindow::GetApp()
+{
+	if (MainWindow::APP == nullptr)
+		MainWindow::APP = new MainWindow();
+	return MainWindow::APP;
+}
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), MainScene(nullptr), index(1),
@@ -44,12 +54,23 @@ MainWindow::MainWindow(QWidget *parent)
 	blockNext = new CustomGraphTetrisBlock(QPoint(320, 0), 6);
 	MainScene->addItem(block);
 	MainScene->addItem(blockNext);
+
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
 	delete MainScene;
+}
+
+QGraphicsScene* MainWindow::GetScene()
+{
+	return MainScene;
+}
+
+void MainWindow::startGame()
+{
+	Game g;
 }
 
 void MainWindow::on_pushButton1_clicked()

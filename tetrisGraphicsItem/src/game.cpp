@@ -1,6 +1,6 @@
 #include "game.h"
 
-game::game()
+Game::Game()
 {
-
+	GameSpace space;
 }

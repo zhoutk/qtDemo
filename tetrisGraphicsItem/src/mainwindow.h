@@ -15,8 +15,10 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr);
+	static MainWindow* GetApp();
     ~MainWindow();
+	QGraphicsScene* GetScene();
+	void startGame();
 
 public slots:
 	void on_pushButton1_clicked();
@@ -26,8 +28,11 @@ public slots:
 	void on_pushButton5_clicked();
 
 private:
-    Ui::MainWindow *ui;
-    QGraphicsScene* MainScene;
+	MainWindow(QWidget* parent = nullptr);
+	Ui::MainWindow* ui;
+	static MainWindow* APP;
+	
+	QGraphicsScene* MainScene;
 	CustomGraphTetrisBlock* block;
 	CustomGraphTetrisBlock* blockNext;
 
@@ -36,5 +41,6 @@ private:
 	TetrisView* blockView;
 
 	QPoint curPos;
+
 };
 #endif // MAINWINDOW_H

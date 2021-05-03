@@ -1,6 +1,6 @@
 #include "customgraphtetrisblock.h"
 
-const int BLOCKSIDEWIDTH = 30;
+extern const int BLOCKSIDEWIDTH = 30;
 const int BLOCKSIDELENGTH = 4;
 const int BLOCKDATASIZE = BLOCKSIDELENGTH * BLOCKSIDELENGTH;
 QVector<QVector<int>> SHAPES = {
