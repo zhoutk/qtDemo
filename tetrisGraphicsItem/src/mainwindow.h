@@ -5,6 +5,7 @@
 #include <QGraphicsScene>
 #include "customGraphItem/customgraphtetrisblock.h"
 #include "tetrisview.h"
+#include "tetris.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -33,8 +34,8 @@ private:
 	static MainWindow* APP;
 	
 	QGraphicsScene* MainScene;
-	CustomGraphTetrisBlock* block;
-	CustomGraphTetrisBlock* blockNext;
+	Tetris* block;
+	Tetris* blockNext;
 
     int index;
 	TetrisView* gameView;

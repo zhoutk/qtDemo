@@ -49,12 +49,6 @@ MainWindow::MainWindow(QWidget *parent)
 	mainLayout->addLayout(rightLayout);
 	centerView->setLayout(mainLayout);
 	this->setCentralWidget(centerView);
-
-	block = new CustomGraphTetrisBlock(curPos, 0);
-	blockNext = new CustomGraphTetrisBlock(QPoint(11, 0), 6);
-	MainScene->addItem(block);
-	MainScene->addItem(blockNext);
-
 }
 
 MainWindow::~MainWindow()
@@ -70,6 +64,8 @@ QGraphicsScene* MainWindow::GetScene()
 
 void MainWindow::startGame()
 {
+	block = new Tetris(curPos, 0);
+	blockNext = new Tetris(QPoint(11, 0), 6);
 	Game g;
 }
 

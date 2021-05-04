@@ -1,5 +1,5 @@
-#ifndef CUSTOMGRAPHTETRISBLOCK_H
-#define CUSTOMGRAPHTETRISBLOCK_H
+#ifndef CUSTOMGRAPHTETRISBIT_H
+#define CUSTOMGRAPHTETRISBIT_H
 #include "customgraphbase.h"
 #include <QPainter>
 #include <QVector>
@@ -11,12 +11,11 @@ class CustomGraphTetrisBlock : public CustomGraphBase
 {
 	Q_OBJECT
 		enum {
-		Type = TETRISBLOCKTYPE
+		Type = TETRISBITTYPE
 	};
 public:
-	CustomGraphTetrisBlock(int blockType = 0);
-	CustomGraphTetrisBlock(QPoint pos);
-	CustomGraphTetrisBlock(QPoint pos, int blockType);
+	CustomGraphTetrisBlock(int biType = 0);
+	CustomGraphTetrisBlock(QPoint pos, int biType = 0);
 
 	QRectF boundingRect() const override;
 	int type() const override;
@@ -26,20 +25,9 @@ public:
 
 	void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
 
-	bool rotate();
-	bool moveLeft();
-	bool moveRight();
-	bool moveDown();
-	void moveDownEnd();
-	int cleanRow();
-	bool canSee(int x, int y);
-	void erase(int x, int y);
-
 private:
 	QPoint pos;
-	int blockType;
-	QVector<QVector<int>> data;
-	int sideLen;
+	int biType;		//0-border; 1-fix block;
 };
 
-#endif // CUSTOMGRAPHTETRISBLOCK_H
+#endif // CUSTOMGRAPHTETRISBIT_H
