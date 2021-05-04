@@ -28,6 +28,10 @@ public:
 	void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
 
 	bool rotate();
+	bool moveLeft();
+	bool moveRight();
+	bool moveDown();
+	bool canSee(int x, int y);
 
 private:
 	QPoint pos;

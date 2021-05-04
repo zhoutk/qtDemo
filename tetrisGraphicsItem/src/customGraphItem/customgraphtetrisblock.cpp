@@ -1,4 +1,6 @@
 #include "customgraphtetrisblock.h"
+#include "../mainwindow.h"
+#include "QGraphicsScene"
 
 extern const int BLOCKSIDEWIDTH = 30;
 const int BLOCKSIDELENGTH = 4;
@@ -105,9 +107,69 @@ bool CustomGraphTetrisBlock::rotate()
 	return true;
 }
 
+bool CustomGraphTetrisBlock::moveLeft()
+{
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			if (data[i][j] && (j == 0 || data[i][j - 1] == 0)) {
+				if (!this->canSee(pos.x() + j - 1, pos.y() + i)) {
+					return false;
+				}
+			}
+		}
+	}
+	pos.setX(pos.x() - 1);
+	this->relocate();
+	return true;
+}
+
+bool CustomGraphTetrisBlock::moveRight()
+{
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			if (data[i][j] && (j == 3 || data[i][j + 1] == 0)) {
+				if (!this->canSee(pos.x() + j + 1, pos.y() + i)) {
+					return false;
+				}
+			}
+		}
+	}
+	pos.setX(pos.x() + 1);
+	this->relocate();
+	return true;
+}
+
+bool CustomGraphTetrisBlock::moveDown()
+{
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			if (data[i][j] && (i == 3 || data[i + 1][j] == 0)) {
+				if (!this->canSee(pos.x() + j, pos.y() + i + 1)) {
+					return false;
+				}
+			}
+		}
+	}
+	pos.setY(pos.y() + 1);
+	this->relocate();
+	return true;
+}
+
+bool CustomGraphTetrisBlock::canSee(int x, int y)
+{
+	auto items = MainWindow::GetApp()->GetScene()->items(QPointF(x * 30.0 + 10, y * 30.0 + 10));
+	foreach (auto al , items)
+	{
+		if ((((CustomGraphBase*)al)->type()) == TETRISBITTYPE) {
+			return false;
+		}
+	}
+	return true;
+}
+
 void CustomGraphTetrisBlock::relocate()
 {
-	this->setPos(pos);
+	this->setPos(pos * 30);
 }
 
 void CustomGraphTetrisBlock::relocate(QPoint p)

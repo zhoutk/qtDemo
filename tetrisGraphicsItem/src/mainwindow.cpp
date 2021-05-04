@@ -18,7 +18,7 @@ MainWindow* MainWindow::GetApp()
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), MainScene(nullptr), index(1),
 	gameView(nullptr),blockView(nullptr),
-	curPos(QPoint(90,0))
+	curPos(QPoint(3,0))
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
@@ -34,7 +34,7 @@ MainWindow::MainWindow(QWidget *parent)
 	mainLayout->addWidget(gameView);
 	blockView = new TetrisView();
 	blockView->setScene(MainScene);
-	blockView->setSceneRect(320, 0, 120, 120);
+	blockView->setSceneRect(330, 0, 120, 120);
 	blockView->setMaximumWidth(121);
 	blockView->setMaximumHeight(121);
 	QVBoxLayout* rightLayout = new QVBoxLayout;
@@ -51,7 +51,7 @@ MainWindow::MainWindow(QWidget *parent)
 	this->setCentralWidget(centerView);
 
 	block = new CustomGraphTetrisBlock(curPos, 0);
-	blockNext = new CustomGraphTetrisBlock(QPoint(320, 0), 6);
+	blockNext = new CustomGraphTetrisBlock(QPoint(11, 0), 6);
 	MainScene->addItem(block);
 	MainScene->addItem(blockNext);
 
@@ -75,26 +75,22 @@ void MainWindow::startGame()
 
 void MainWindow::on_pushButton1_clicked()
 {
-	curPos.setY(curPos.y() - 30);
-	block->relocate(curPos);
+	//block->moveDown();
 }
 
 void MainWindow::on_pushButton2_clicked()
 {
-	curPos.setY(curPos.y() + 30);
-	block->relocate(curPos);
+	block->moveDown();
 }
 
 void MainWindow::on_pushButton3_clicked()
 {
-	curPos.setX(curPos.x() - 30);
-	block->relocate(curPos);
+	block->moveLeft();
 }
 
 void MainWindow::on_pushButton4_clicked()
 {
-	curPos.setX(curPos.x() + 30);
-	block->relocate(curPos);
+	block->moveRight();
 }
 
 void MainWindow::on_pushButton5_clicked()
