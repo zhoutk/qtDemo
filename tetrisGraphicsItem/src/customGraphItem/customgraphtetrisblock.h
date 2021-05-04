@@ -14,10 +14,9 @@ class CustomGraphTetrisBlock : public CustomGraphBase
 		Type = TETRISBLOCKTYPE
 	};
 public:
-	CustomGraphTetrisBlock();
+	CustomGraphTetrisBlock(int blockType = 0);
 	CustomGraphTetrisBlock(QPoint pos);
 	CustomGraphTetrisBlock(QPoint pos, int blockType);
-	CustomGraphTetrisBlock(int blockType);
 
 	QRectF boundingRect() const override;
 	int type() const override;

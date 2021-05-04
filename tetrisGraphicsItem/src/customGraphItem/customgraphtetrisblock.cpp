@@ -16,13 +16,18 @@ QVector<QVector<int>> SHAPES = {
 	{0, 1, 0, 0, 1, 1, 1} 
 };
 
-CustomGraphTetrisBlock::CustomGraphTetrisBlock() :
+CustomGraphTetrisBlock::CustomGraphTetrisBlock(int blockType) :
 	pos(QPoint(0,0)), 
 	sideLen(BLOCKSIDELENGTH), 
-	blockType(0)
+	blockType(blockType)
 {
 	for (int i = 0; i < sideLen; i++) 
 		data.push_back(QVector<int>(sideLen));
+	QVector<int> shape = SHAPES[blockType % SHAPES.size()];
+	for (int i = 0; i < shape.size(); i++) {
+		if (shape[i])
+			data[1 + i / sideLen][i % sideLen] = true;
+	}
 	this->relocate();
 }
 
@@ -31,17 +36,6 @@ CustomGraphTetrisBlock::CustomGraphTetrisBlock(QPoint pos)
 	new (this)CustomGraphTetrisBlock();
 	this->pos = pos;
 	this->relocate();
-}
-
-CustomGraphTetrisBlock::CustomGraphTetrisBlock(int blockType)
-{
-	new (this)CustomGraphTetrisBlock();
-	this->blockType = blockType;
-	QVector<int> shape = SHAPES[blockType % SHAPES.size()];
-	for (int i = 0; i < shape.size(); i++) {
-		if (shape[i])
-			data[1 + i / sideLen][i % sideLen] = true;
-	}
 }
 
 CustomGraphTetrisBlock::CustomGraphTetrisBlock(QPoint pos, int blockType)
