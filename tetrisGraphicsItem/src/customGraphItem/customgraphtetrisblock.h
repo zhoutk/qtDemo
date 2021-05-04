@@ -31,7 +31,10 @@ public:
 	bool moveLeft();
 	bool moveRight();
 	bool moveDown();
+	void moveDownEnd();
+	int cleanRow();
 	bool canSee(int x, int y);
+	void erase(int x, int y);
 
 private:
 	QPoint pos;

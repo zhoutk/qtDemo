@@ -10,12 +10,12 @@ GameSpace::GameSpace() : scene(nullptr)
 
 	for (int i = 0; i < 12; i++)
 	{
-		scene->addItem(new CustomGraphTetrisBit(QPoint((i - 1) * BLOCKSIDEWIDTH, -BLOCKSIDEWIDTH)));
-		scene->addItem(new CustomGraphTetrisBit(QPoint((i - 1) * BLOCKSIDEWIDTH, 20 * BLOCKSIDEWIDTH)));
+		//scene->addItem(new CustomGraphTetrisBit(QPoint(i - 1, -1)));
+		scene->addItem(new CustomGraphTetrisBit(QPoint(i - 1, 20)));
 	}
 	for (int i = 0; i < 20; i++)
 	{
-		scene->addItem(new CustomGraphTetrisBit(QPoint(-BLOCKSIDEWIDTH, i * BLOCKSIDEWIDTH)));
-		scene->addItem(new CustomGraphTetrisBit(QPoint(10 * BLOCKSIDEWIDTH, i * BLOCKSIDEWIDTH)));
+		scene->addItem(new CustomGraphTetrisBit(QPoint(-1, i)));
+		scene->addItem(new CustomGraphTetrisBit(QPoint(10, i)));
 	}
 }

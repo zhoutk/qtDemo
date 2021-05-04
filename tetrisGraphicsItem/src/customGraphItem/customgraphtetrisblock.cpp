@@ -1,6 +1,7 @@
 #include "customgraphtetrisblock.h"
 #include "../mainwindow.h"
 #include "QGraphicsScene"
+#include "customgraphtetrisbit.h"
 
 extern const int BLOCKSIDEWIDTH = 30;
 const int BLOCKSIDELENGTH = 4;
@@ -141,23 +142,80 @@ bool CustomGraphTetrisBlock::moveRight()
 
 bool CustomGraphTetrisBlock::moveDown()
 {
+	bool canMove = true;
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {
 			if (data[i][j] && (i == 3 || data[i + 1][j] == 0)) {
 				if (!this->canSee(pos.x() + j, pos.y() + i + 1)) {
-					return false;
+					canMove = false;
+					break;
 				}
 			}
 		}
+		if (!canMove) {
+			break;
+		}
 	}
-	pos.setY(pos.y() + 1);
-	this->relocate();
-	return true;
+	if (canMove) {
+		pos.setY(pos.y() + 1);
+		this->relocate();
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
+void CustomGraphTetrisBlock::moveDownEnd()
+{
+	while (this->moveDown());
+}
+
+int CustomGraphTetrisBlock::cleanRow()
+{
+	int h = 19, levelCount = 0;
+	while (h >= 0) {
+		int count = 0;
+		for (int i = 0; i < 10; i++) {
+			if (this->canSee(i, h)) {
+				count++;
+			}
+		}
+		if (count == 0) {
+			int level = h;
+			levelCount++;
+			while (level >= 0) {
+				int ct = 0;
+				for (int j = 0; j < 10; j++) {
+					this->erase(j, level);
+					if (this->canSee(j, level - 1)) {
+						ct++;
+					}
+					else {
+						MainWindow::GetApp()->GetScene()->addItem(new CustomGraphTetrisBit(QPoint(j, level - 1), 1));
+					}
+				}
+				if (ct == 10) {
+					break;
+				}
+				else {
+					level--;
+				}
+			}
+		}
+		else if (count == 10) {
+			break;
+		}
+		else {
+			h--;
+		}
+	}
+	return levelCount;
 }
 
 bool CustomGraphTetrisBlock::canSee(int x, int y)
 {
-	auto items = MainWindow::GetApp()->GetScene()->items(QPointF(x * 30.0 + 10, y * 30.0 + 10));
+	auto items = MainWindow::GetApp()->GetScene()->items(QPointF((x + 0.5) * BLOCKSIDEWIDTH, (y + 0.5) * BLOCKSIDEWIDTH));
 	foreach (auto al , items)
 	{
 		if ((((CustomGraphBase*)al)->type()) == TETRISBITTYPE) {
@@ -167,9 +225,21 @@ bool CustomGraphTetrisBlock::canSee(int x, int y)
 	return true;
 }
 
+void CustomGraphTetrisBlock::erase(int x, int y)
+{
+	auto items = MainWindow::GetApp()->GetScene()->items(QPointF((x + 0.5) * BLOCKSIDEWIDTH, (y + 0.5) * BLOCKSIDEWIDTH));
+	foreach(auto al, items)
+	{
+		if ((((CustomGraphBase*)al)->type()) == TETRISBITTYPE) {
+			MainWindow::GetApp()->GetScene()->removeItem(al);
+			return;
+		}
+	}
+}
+
 void CustomGraphTetrisBlock::relocate()
 {
-	this->setPos(pos * 30);
+	this->setPos(pos * BLOCKSIDEWIDTH);
 }
 
 void CustomGraphTetrisBlock::relocate(QPoint p)

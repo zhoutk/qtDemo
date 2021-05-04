@@ -75,7 +75,7 @@ void MainWindow::startGame()
 
 void MainWindow::on_pushButton1_clicked()
 {
-	//block->moveDown();
+	block->moveDownEnd();
 }
 
 void MainWindow::on_pushButton2_clicked()

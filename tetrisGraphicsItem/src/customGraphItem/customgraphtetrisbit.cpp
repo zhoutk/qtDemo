@@ -51,7 +51,7 @@ void CustomGraphTetrisBit::paint(QPainter* painter, const QStyleOptionGraphicsIt
 
 void CustomGraphTetrisBit::relocate()
 {
-	this->setPos(pos);
+	this->setPos(pos * BLOCKSIDEWIDTH);
 }
 
 void CustomGraphTetrisBit::relocate(QPoint p)
