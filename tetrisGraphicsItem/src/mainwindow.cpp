@@ -4,7 +4,6 @@
 #include <QHBoxLayout>
 #include <QSizePolicy>
 #include <QSpacerItem>
-#include "game.h"
 
 MainWindow* MainWindow::APP = nullptr;
 
@@ -16,10 +15,7 @@ MainWindow* MainWindow::GetApp()
 }
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent), MainScene(nullptr), index(1),
-	gameView(nullptr),blockView(nullptr),
-	curPos(QPoint(3,-1))
-    , ui(new Ui::MainWindow)
+    : QMainWindow(parent), MainScene(nullptr), gameView(nullptr),blockView(nullptr), ui(new Ui::MainWindow), game(nullptr)
 {
     ui->setupUi(this);
 	QHBoxLayout* mainLayout = new QHBoxLayout;
@@ -55,6 +51,7 @@ MainWindow::~MainWindow()
 {
     delete ui;
 	delete MainScene;
+	delete game;
 }
 
 QGraphicsScene* MainWindow::GetScene()
@@ -62,36 +59,36 @@ QGraphicsScene* MainWindow::GetScene()
 	return MainScene;
 }
 
-void MainWindow::startGame()
+Game* MainWindow::GetGame()
 {
-	block = new Tetris(curPos, 0);
-	blockNext = new Tetris(QPoint(11, 0), 6);
-	Game g;
+	return game;
 }
 
 void MainWindow::on_pushButton1_clicked()
 {
-	block->moveDownEnd();
+	if (!game)
+		game = new Game();
+	game->start();
 }
 
 void MainWindow::on_pushButton2_clicked()
 {
-	block->moveDown();
+	//block->moveDown();
 }
 
 void MainWindow::on_pushButton3_clicked()
 {
-	block->moveLeft();
+	//block->moveLeft();
 }
 
 void MainWindow::on_pushButton4_clicked()
 {
-	block->moveRight();
+	//block->moveRight();
 }
 
 void MainWindow::on_pushButton5_clicked()
 {
-	blockNext->rotate();
-	block->rotate();
+	//blockNext->rotate();
+	//block->rotate();
 }
 
