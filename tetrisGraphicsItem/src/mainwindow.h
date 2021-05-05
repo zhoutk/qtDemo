@@ -23,11 +23,8 @@ public:
 	Game* GetGame();
 
 public slots:
+	void slotGameOver();
 	void on_pushButton1_clicked();
-	void on_pushButton2_clicked();
-	void on_pushButton3_clicked();
-	void on_pushButton4_clicked();
-	void on_pushButton5_clicked();
 
 private:
 	MainWindow(QWidget* parent = nullptr);

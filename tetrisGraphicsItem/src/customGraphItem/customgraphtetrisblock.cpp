@@ -49,6 +49,11 @@ void CustomGraphTetrisBlock::paint(QPainter* painter, const QStyleOptionGraphics
 	prepareGeometryChange();
 }
 
+int CustomGraphTetrisBlock::getBlockType()
+{
+	return blockType;
+}
+
 bool CustomGraphTetrisBlock::isActive()
 {
 	return blockType == 2;

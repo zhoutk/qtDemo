@@ -4,6 +4,7 @@
 #include <QHBoxLayout>
 #include <QSizePolicy>
 #include <QSpacerItem>
+#include "customGraphItem/customgraphtetristext.h"
 
 MainWindow* MainWindow::APP = nullptr;
 
@@ -37,10 +38,6 @@ MainWindow::MainWindow(QWidget *parent)
 	rightLayout->addWidget(blockView);
 	rightLayout->addItem(new QSpacerItem(20, 50, QSizePolicy::Fixed, QSizePolicy::Minimum));
 	rightLayout->addWidget(ui->pushButton1);
-	rightLayout->addWidget(ui->pushButton2);
-	rightLayout->addWidget(ui->pushButton3);
-	rightLayout->addWidget(ui->pushButton4);
-	rightLayout->addWidget(ui->pushButton5);
 	rightLayout->addItem(new QSpacerItem(20, 20, QSizePolicy::Minimum, QSizePolicy::Expanding));
 	mainLayout->addLayout(rightLayout);
 	centerView->setLayout(mainLayout);
@@ -64,31 +61,26 @@ Game* MainWindow::GetGame()
 	return game;
 }
 
+void MainWindow::slotGameOver()
+{
+	ui->pushButton1->setEnabled(true);
+	MainWindow::GetApp()->GetScene()->addItem(new CustomGraphTetrisText(QPoint(1, 8)));
+}
+
 void MainWindow::on_pushButton1_clicked()
 {
-	if (!game)
+	ui->pushButton1->setEnabled(false);
+	gameView->setFocus();
+	if (!game) {
 		game = new Game();
+		connect(game, &Game::signalGameOver, this, &MainWindow::slotGameOver);
+	}
+	foreach (auto al, MainWindow::GetApp()->GetScene()->items())
+	{
+		if (((CustomGraphBase*)al)->getBlockType() > 0)
+			MainWindow::GetApp()->GetScene()->removeItem(al);
+	}
 	game->start();
 }
 
-void MainWindow::on_pushButton2_clicked()
-{
-	//block->moveDown();
-}
-
-void MainWindow::on_pushButton3_clicked()
-{
-	//block->moveLeft();
-}
-
-void MainWindow::on_pushButton4_clicked()
-{
-	//block->moveRight();
-}
-
-void MainWindow::on_pushButton5_clicked()
-{
-	//blockNext->rotate();
-	//block->rotate();
-}
 

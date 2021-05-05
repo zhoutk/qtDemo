@@ -4,6 +4,8 @@
 
 SnowFlake snowFlakeId;
 
+bool isRunning = false;
+
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);

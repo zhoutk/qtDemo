@@ -1,5 +1,5 @@
-#ifndef CUSTOMGRAPHTETRISBLOCK_H
-#define CUSTOMGRAPHTETRISBLOCK_H
+#ifndef CUSTOMGRAPHTETRIS_H
+#define CUSTOMGRAPHTETRIS_H
 #include <QPainter>
 #include <QVector>
 #include <QObject>
@@ -17,6 +17,7 @@ public:
 	void relocate();
 	void relocate(QPoint);
 
+	bool canContinue();
 	bool rotate();
 	bool moveLeft();
 	bool moveRight();
@@ -34,4 +35,4 @@ private:
 	QVector<CustomGraphTetrisBlock*> blocks;
 };
 
-#endif // CUSTOMGRAPHTETRISBLOCK_H
+#endif // CUSTOMGRAPHTETRIS_H

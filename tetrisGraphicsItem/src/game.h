@@ -2,6 +2,7 @@
 #define GAME_H
 
 #include <QObject>
+#include <QTime>
 #include "gamespace.h"
 #include "tetris.h"
 
@@ -16,6 +17,10 @@ public:
     void moveBlockRight();
     void moveBlockDown();
     void moveBlockDownEnd();
+    void generateNextBlock();
+
+signals:
+    void signalGameOver();
 
 private:
 	QPoint curPos;

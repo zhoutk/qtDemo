@@ -84,6 +84,20 @@ bool Tetris::rotate()
 	return true;
 }
 
+bool Tetris::canContinue()
+{
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			if (data[i][j]) {
+				if (!this->canSee(pos.x() + j, pos.y() + i)) {
+					return false;
+				}
+			}
+		}
+	}
+	return true;
+}
+
 bool Tetris::moveLeft()
 {
 	for (int i = 0; i < 4; i++) {
@@ -232,3 +246,4 @@ void Tetris::relocate(QPoint p)
 	this->pos = p;
 	this->relocate();
 }
+

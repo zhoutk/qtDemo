@@ -33,6 +33,7 @@ public:
 	virtual void relocate() = 0;
 	virtual Qjson getFactors() = 0;
 	virtual bool isActive() { return false; };
+	virtual int getBlockType() { return 0; };
 };
 
 #endif // CUSTOMGRAPHBASE_H
