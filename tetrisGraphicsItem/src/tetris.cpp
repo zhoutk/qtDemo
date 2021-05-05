@@ -59,10 +59,10 @@ bool Tetris::rotate()
 		for (j = i; j < lenJ; j++)
 		{
 			int lenI = sideLen - j - 1;
-			if (data[i][j] && !this->canSee(pos.x() + lenJ, pos.y() + j) ||
-				data[lenI][i] && !this->canSee(pos.x() + j, pos.y() + i) ||
-				data[lenJ][lenI] && !this->canSee(pos.x() + i, pos.y() + lenI) ||
-				data[j][lenJ] && !this->canSee(pos.x() + lenI, pos.y() + lenJ)){
+			if (data[i][j] && this->hasTetrisBlock(pos.x() + lenJ, pos.y() + j) ||
+				data[lenI][i] && this->hasTetrisBlock(pos.x() + j, pos.y() + i) ||
+				data[lenJ][lenI] && this->hasTetrisBlock(pos.x() + i, pos.y() + lenI) ||
+				data[j][lenJ] && this->hasTetrisBlock(pos.x() + lenI, pos.y() + lenJ)){
                 return false;
             }
         }
@@ -89,7 +89,7 @@ bool Tetris::canContinue()
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {
 			if (data[i][j]) {
-				if (!this->canSee(pos.x() + j, pos.y() + i)) {
+				if (this->hasTetrisBlock(pos.x() + j, pos.y() + i)) {
 					return false;
 				}
 			}
@@ -103,7 +103,7 @@ bool Tetris::moveLeft()
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {
 			if (data[i][j] && (j == 0 || data[i][j - 1] == 0)) {
-				if (!this->canSee(pos.x() + j - 1, pos.y() + i)) {
+				if (this->hasTetrisBlock(pos.x() + j - 1, pos.y() + i)) {
 					return false;
 				}
 			}
@@ -119,7 +119,7 @@ bool Tetris::moveRight()
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {
 			if (data[i][j] && (j == 3 || data[i][j + 1] == 0)) {
-				if (!this->canSee(pos.x() + j + 1, pos.y() + i)) {
+				if (this->hasTetrisBlock(pos.x() + j + 1, pos.y() + i)) {
 					return false;
 				}
 			}
@@ -136,7 +136,7 @@ bool Tetris::moveDown()
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {
 			if (data[i][j] && (i == 3 || data[i + 1][j] == 0)) {
-				if (!this->canSee(pos.x() + j, pos.y() + i + 1)) {
+				if (this->hasTetrisBlock(pos.x() + j, pos.y() + i + 1)) {
 					canMove = false;
 					break;
 				}
@@ -169,24 +169,28 @@ int Tetris::cleanRow()
 	while (h >= 0) {
 		int count = 0;
 		for (int i = 0; i < 10; i++) {
-			if (this->canSee(i, h)) {
+			if (!this->hasTetrisBlock(i, h)) {
 				count++;
 			}
 		}
 		if (count == 0) {
 			int level = h;
 			levelCount++;
+			bool first = true;
 			while (level >= 0) {
 				int ct = 0;
 				for (int j = 0; j < 10; j++) {
-					this->erase(j, level);
-					if (this->canSee(j, level - 1)) {
+					if(first)
+						this->erase(j, level);
+					CustomGraphTetrisBlock* block = this->hasTetrisBlock(j, level - 1);
+					if (!block) {
 						ct++;
 					}
 					else {
-						MainWindow::GetApp()->GetScene()->addItem(new CustomGraphTetrisBlock(QPoint(j, level - 1), 1));
+						block->relocate(QPoint(j, level));
 					}
 				}
+				first = false;
 				if (ct == 10) {
 					break;
 				}
@@ -205,16 +209,16 @@ int Tetris::cleanRow()
 	return levelCount;
 }
 
-bool Tetris::canSee(int x, int y)
+CustomGraphTetrisBlock* Tetris::hasTetrisBlock(int x, int y)
 {
 	auto items = MainWindow::GetApp()->GetScene()->items(QPointF((x + 0.5) * BLOCKSIDEWIDTH, (y + 0.5) * BLOCKSIDEWIDTH));
 	foreach (auto al , items)
 	{
 		if (!(((CustomGraphBase*)al)->isActive()) && (((CustomGraphBase*)al)->type()) == TETRISBLOCKTYPE) {
-			return false;
+			return (CustomGraphTetrisBlock*)al;
 		}
 	}
-	return true;
+	return nullptr;
 }
 
 void Tetris::erase(int x, int y)

@@ -39,6 +39,10 @@ Qjson CustomGraphTetrisBlock::getFactors()
 void CustomGraphTetrisBlock::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget /*= nullptr*/)
 {
 	if (blockType) {
+		QBrush brushRef(Qt::darkMagenta);
+		brushRef.setStyle(Qt::SolidPattern);
+		painter->setBrush(brushRef);
+		painter->setPen(QPen(Qt::yellow, 1));
 		painter->drawRoundedRect(
 			0,
 			0,

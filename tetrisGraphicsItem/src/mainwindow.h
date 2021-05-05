@@ -21,10 +21,12 @@ public:
     ~MainWindow();
 	QGraphicsScene* GetScene();
 	Game* GetGame();
+	void updateScore();
 
 public slots:
 	void slotGameOver();
-	void on_pushButton1_clicked();
+	void slotUpdateScore();
+	void on_pushButtonStart_clicked();
 
 private:
 	MainWindow(QWidget* parent = nullptr);

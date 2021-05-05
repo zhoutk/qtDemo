@@ -24,7 +24,7 @@ public:
 	bool moveDown();
 	void moveDownEnd();
 	int cleanRow();
-	bool canSee(int x, int y);
+	CustomGraphTetrisBlock* hasTetrisBlock(int x, int y);
 	void erase(int x, int y);
 
 private:

@@ -25,10 +25,12 @@ MainWindow::MainWindow(QWidget *parent)
 	//MainScene->setSceneRect(0, 0, 300/*this->geometry().width()*/, 600/*this->geometry().height()*/);
 	gameView = new TetrisView();
 	gameView->setScene(MainScene);
-    gameView->setSceneRect(0, 0, 300/*this->geometry().width()*/, 600/*this->geometry().height()*/);
+    gameView->setSceneRect(0, 0, 300/*this->geometry().width()*/, 601/*this->geometry().height()*/);
     gameView->setMaximumWidth(301);
     gameView->setMaximumHeight(601);
-	mainLayout->addWidget(gameView);
+	QVBoxLayout* leftLayout = new QVBoxLayout;
+	leftLayout->addWidget(gameView);
+	leftLayout->addItem(new QSpacerItem(1, 1, QSizePolicy::Minimum, QSizePolicy::Expanding));
 	blockView = new TetrisView();
 	blockView->setScene(MainScene);
 	blockView->setSceneRect(330, 0, 120, 120);
@@ -37,8 +39,16 @@ MainWindow::MainWindow(QWidget *parent)
 	QVBoxLayout* rightLayout = new QVBoxLayout;
 	rightLayout->addWidget(blockView);
 	rightLayout->addItem(new QSpacerItem(20, 50, QSizePolicy::Fixed, QSizePolicy::Minimum));
-	rightLayout->addWidget(ui->pushButton1);
+	rightLayout->addWidget(ui->labelSpeed);
+	rightLayout->addWidget(ui->lineEditSpeed);
+	rightLayout->addWidget(ui->labelLevels);
+	rightLayout->addWidget(ui->lineEditLevels);
+	rightLayout->addWidget(ui->labelScores);
+	rightLayout->addWidget(ui->lineEditScores);
+	rightLayout->addItem(new QSpacerItem(20, 20, QSizePolicy::Fixed, QSizePolicy::Minimum));
+	rightLayout->addWidget(ui->pushButtonStart);
 	rightLayout->addItem(new QSpacerItem(20, 20, QSizePolicy::Minimum, QSizePolicy::Expanding));
+	mainLayout->addLayout(leftLayout);
 	mainLayout->addLayout(rightLayout);
 	centerView->setLayout(mainLayout);
 	this->setCentralWidget(centerView);
@@ -61,19 +71,32 @@ Game* MainWindow::GetGame()
 	return game;
 }
 
+void MainWindow::updateScore()
+{
+	ui->lineEditSpeed->setText(QString::number(game->getSpeed()));
+	ui->lineEditLevels->setText(QString::number(game->getLevels()));
+	ui->lineEditScores->setText(QString::number(game->getScores()));
+}
+
 void MainWindow::slotGameOver()
 {
-	ui->pushButton1->setEnabled(true);
+	ui->pushButtonStart->setEnabled(true);
 	MainWindow::GetApp()->GetScene()->addItem(new CustomGraphTetrisText(QPoint(1, 8)));
 }
 
-void MainWindow::on_pushButton1_clicked()
+void MainWindow::slotUpdateScore()
 {
-	ui->pushButton1->setEnabled(false);
+	this->updateScore();
+}
+
+void MainWindow::on_pushButtonStart_clicked()
+{
+	ui->pushButtonStart->setEnabled(false);
 	gameView->setFocus();
 	if (!game) {
 		game = new Game();
 		connect(game, &Game::signalGameOver, this, &MainWindow::slotGameOver);
+		connect(game, &Game::signalUpdateScore, this, &MainWindow::slotUpdateScore);
 	}
 	foreach (auto al, MainWindow::GetApp()->GetScene()->items())
 	{
@@ -83,6 +106,7 @@ void MainWindow::on_pushButton1_clicked()
 		}
 	}
 	game->start();
+	this->updateScore();
 }
 
 
