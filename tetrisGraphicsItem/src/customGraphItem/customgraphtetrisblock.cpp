@@ -1,4 +1,5 @@
 #include "customgraphtetrisblock.h"
+#include "qDebug"
 
 extern const int BLOCKSIDEWIDTH;
 
@@ -46,7 +47,8 @@ void CustomGraphTetrisBlock::paint(QPainter* painter, const QStyleOptionGraphics
 			2, 2
 		);
 	}
-	prepareGeometryChange();
+	//prepareGeometryChange();
+	//qDebug() << "--------------------- block --------------------";
 }
 
 int CustomGraphTetrisBlock::getBlockType()
@@ -67,6 +69,7 @@ void CustomGraphTetrisBlock::setNotActive()
 void CustomGraphTetrisBlock::relocate()
 {
 	this->setPos(pos * BLOCKSIDEWIDTH);
+	prepareGeometryChange();
 }
 
 void CustomGraphTetrisBlock::relocate(QPoint p)

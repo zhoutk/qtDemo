@@ -37,7 +37,8 @@ void CustomGraphTetrisText::paint(QPainter* painter, const QStyleOptionGraphicsI
 	painter->setFont(QFont("Microsoft YaHei", 32));
 	painter->setPen(QPen(Qt::red));
 	painter->drawText(0, 0, text);
-	prepareGeometryChange();
+	//prepareGeometryChange();
+	//qDebug() << "--------------------- text --------------------";
 }
 
 int CustomGraphTetrisText::getBlockType()
@@ -48,6 +49,7 @@ int CustomGraphTetrisText::getBlockType()
 void CustomGraphTetrisText::relocate()
 {
 	this->setPos(pos * 30);
+	prepareGeometryChange();
 }
 
 void CustomGraphTetrisText::relocate(QPoint p)

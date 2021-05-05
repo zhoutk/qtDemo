@@ -222,7 +222,7 @@ void Tetris::erase(int x, int y)
 	auto items = MainWindow::GetApp()->GetScene()->items(QPointF((x + 0.5) * BLOCKSIDEWIDTH, (y + 0.5) * BLOCKSIDEWIDTH));
 	foreach(auto al, items)
 	{
-		if (!(((CustomGraphBase*)al)->isActive()) && (((CustomGraphBase*)al)->type()) == TETRISBLOCKTYPE) {
+		if ((((CustomGraphBase*)al)->getBlockType() == 1) && (((CustomGraphBase*)al)->type()) == TETRISBLOCKTYPE) {
 			MainWindow::GetApp()->GetScene()->removeItem(al);
 			return;
 		}

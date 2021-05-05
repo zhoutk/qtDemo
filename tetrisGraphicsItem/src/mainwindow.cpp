@@ -77,8 +77,10 @@ void MainWindow::on_pushButton1_clicked()
 	}
 	foreach (auto al, MainWindow::GetApp()->GetScene()->items())
 	{
-		if (((CustomGraphBase*)al)->getBlockType() > 0)
+		if (((CustomGraphBase*)al)->getBlockType() > 0) {
 			MainWindow::GetApp()->GetScene()->removeItem(al);
+			delete al;
+		}
 	}
 	game->start();
 }
