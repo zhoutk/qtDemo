@@ -27,7 +27,7 @@ Tetris::Tetris(int blockType) :
 	for (int i = 0; i < shape.size(); i++) {
 		if (shape[i]) {
 			data[1 + i / sideLen][i % sideLen] = true;
-			CustomGraphTetrisBlock* block = new CustomGraphTetrisBlock(pos + QPoint(i % sideLen, 1 + i / sideLen), 1);
+			CustomGraphTetrisBlock* block = new CustomGraphTetrisBlock(pos + QPoint(i % sideLen, 1 + i / sideLen), 2);
 			blocks.push_back(block);
 			MainWindow::GetApp()->GetScene()->addItem(block);
 		}
@@ -53,18 +53,16 @@ Tetris::Tetris(QPoint pos, int blockType)
 bool Tetris::rotate()
 {
     int i, j, t, lenHalf = sideLen / 2, lenJ;
-    bool canRotate = true;
     for (i = 0; i < lenHalf; i++)
     {
         lenJ = sideLen - i - 1;
-        for (j = i; j < lenJ; j++)
-        {
-            int lenI = sideLen - j - 1;
-            if(data[i][j] && !this->canSee(j, lenJ) ||
-               data[lenI][i] && !this->canSee(i, j) ||
-               data[lenJ][lenI] && !this->canSee(lenI, i) ||
-               data[j][lenJ] && !this->canSee(lenJ, lenI)){
-                canRotate = false;
+		for (j = i; j < lenJ; j++)
+		{
+			int lenI = sideLen - j - 1;
+			if (data[i][j] && !this->canSee(pos.x() + lenJ, pos.y() + j) ||
+				data[lenI][i] && !this->canSee(pos.x() + j, pos.y() + i) ||
+				data[lenJ][lenI] && !this->canSee(pos.x() + i, pos.y() + lenI) ||
+				data[j][lenJ] && !this->canSee(pos.x() + lenI, pos.y() + lenJ)){
                 return false;
             }
         }
@@ -196,7 +194,7 @@ bool Tetris::canSee(int x, int y)
 	auto items = MainWindow::GetApp()->GetScene()->items(QPointF((x + 0.5) * BLOCKSIDEWIDTH, (y + 0.5) * BLOCKSIDEWIDTH));
 	foreach (auto al , items)
 	{
-		if ((((CustomGraphBase*)al)->type()) == TETRISBITTYPE) {
+		if (!(((CustomGraphBase*)al)->isActive()) && (((CustomGraphBase*)al)->type()) == TETRISBLOCKTYPE) {
 			return false;
 		}
 	}
@@ -208,7 +206,7 @@ void Tetris::erase(int x, int y)
 	auto items = MainWindow::GetApp()->GetScene()->items(QPointF((x + 0.5) * BLOCKSIDEWIDTH, (y + 0.5) * BLOCKSIDEWIDTH));
 	foreach(auto al, items)
 	{
-		if ((((CustomGraphBase*)al)->type()) == TETRISBITTYPE) {
+		if (!(((CustomGraphBase*)al)->isActive()) && (((CustomGraphBase*)al)->type()) == TETRISBLOCKTYPE) {
 			MainWindow::GetApp()->GetScene()->removeItem(al);
 			return;
 		}

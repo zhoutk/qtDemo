@@ -2,16 +2,16 @@
 
 extern const int BLOCKSIDEWIDTH;
 
-CustomGraphTetrisBlock::CustomGraphTetrisBlock(int biType) : pos(QPoint(0,0)), biType(biType)
+CustomGraphTetrisBlock::CustomGraphTetrisBlock(int blockType) : pos(QPoint(0,0)), blockType(blockType)
 {
 	this->relocate();
 }
 
-CustomGraphTetrisBlock::CustomGraphTetrisBlock(QPoint pos, int biType)
+CustomGraphTetrisBlock::CustomGraphTetrisBlock(QPoint pos, int blockType)
 {
 	new (this)CustomGraphTetrisBlock();
 	this->pos = pos;
-	this->biType = biType;
+	this->blockType = blockType;
 	this->relocate();
 }
 
@@ -37,7 +37,7 @@ Qjson CustomGraphTetrisBlock::getFactors()
 
 void CustomGraphTetrisBlock::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget /*= nullptr*/)
 {
-	if (biType) {
+	if (blockType) {
 		painter->drawRoundedRect(
 			0,
 			0,
@@ -47,6 +47,11 @@ void CustomGraphTetrisBlock::paint(QPainter* painter, const QStyleOptionGraphics
 		);
 	}
 	prepareGeometryChange();
+}
+
+bool CustomGraphTetrisBlock::isActive()
+{
+	return blockType == 2;
 }
 
 void CustomGraphTetrisBlock::relocate()

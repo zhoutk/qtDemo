@@ -32,6 +32,7 @@ public:
 	virtual int type() const = 0;
 	virtual void relocate() = 0;
 	virtual Qjson getFactors() = 0;
+	virtual bool isActive() { return false; };
 };
 
 #endif // CUSTOMGRAPHBASE_H

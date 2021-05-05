@@ -11,11 +11,11 @@ class CustomGraphTetrisBlock : public CustomGraphBase
 {
 	Q_OBJECT
 		enum {
-		Type = TETRISBITTYPE
+		Type = TETRISBLOCKTYPE
 	};
 public:
-	CustomGraphTetrisBlock(int biType = 0);
-	CustomGraphTetrisBlock(QPoint pos, int biType = 0);
+	CustomGraphTetrisBlock(int blockType = 0);
+	CustomGraphTetrisBlock(QPoint pos, int blockType = 0);
 
 	QRectF boundingRect() const override;
 	int type() const override;
@@ -25,9 +25,12 @@ public:
 
 	void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
 
+
+	bool isActive() override;
+
 private:
 	QPoint pos;
-	int biType;		//0-border; 1-fix block;
+	int blockType;		//0-border; 1-fix block; 2-active;
 };
 
 #endif // CUSTOMGRAPHTETRISBIT_H
