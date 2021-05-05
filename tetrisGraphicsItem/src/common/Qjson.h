@@ -167,7 +167,7 @@ public:
 		QJsonObject::iterator iter = json->find(key);
 		if (iter != json->end()) {
 			*vType = (int)(iter->type());
-			v = &(iter->toString());
+            *v = iter->toString();
 		}
 	}
 
