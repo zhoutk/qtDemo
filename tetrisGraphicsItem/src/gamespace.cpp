@@ -10,7 +10,7 @@ GameSpace::GameSpace() : scene(nullptr)
 
 	for (int i = 0; i < 12; i++)
 	{
-		//scene->addItem(new CustomGraphTetrisBit(QPoint(i - 1, -1)));
+		//scene->addItem(new CustomGraphTetrisBlock(QPoint(i - 1, -1)));
 		scene->addItem(new CustomGraphTetrisBlock(QPoint(i - 1, 20)));
 	}
 	for (int i = 0; i < 20; i++)

@@ -18,7 +18,7 @@ MainWindow* MainWindow::GetApp()
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), MainScene(nullptr), index(1),
 	gameView(nullptr),blockView(nullptr),
-	curPos(QPoint(3,0))
+	curPos(QPoint(3,-1))
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);

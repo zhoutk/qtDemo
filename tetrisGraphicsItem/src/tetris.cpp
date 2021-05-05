@@ -138,6 +138,8 @@ bool Tetris::moveDown()
 		return true;
 	}
 	else {
+		foreach(auto block, blocks)
+			block->setNotActive();
 		return false;
 	}
 }

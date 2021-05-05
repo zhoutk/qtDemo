@@ -22,12 +22,10 @@ public:
 	void relocate() override;
 	void relocate(QPoint);
 	Qjson getFactors() override;
+	bool isActive() override;
+	void setNotActive();
 
 	void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
-
-
-	bool isActive() override;
-
 private:
 	QPoint pos;
 	int blockType;		//0-border; 1-fix block; 2-active;

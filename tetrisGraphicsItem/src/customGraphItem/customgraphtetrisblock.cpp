@@ -54,6 +54,11 @@ bool CustomGraphTetrisBlock::isActive()
 	return blockType == 2;
 }
 
+void CustomGraphTetrisBlock::setNotActive()
+{
+	this->blockType = 1;
+}
+
 void CustomGraphTetrisBlock::relocate()
 {
 	this->setPos(pos * BLOCKSIDEWIDTH);
