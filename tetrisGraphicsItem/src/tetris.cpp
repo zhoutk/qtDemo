@@ -52,17 +52,34 @@ Tetris::Tetris(QPoint pos, int blockType)
 
 bool Tetris::rotate()
 {
-	int i, j, t, lenI = sideLen / 2, lenJ;
-	for (i = 0; i < lenI; i++)
+    int i, j, t, lenHalf = sideLen / 2, lenJ;
+    bool canRotate = true;
+    for (i = 0; i < lenHalf; i++)
+    {
+        lenJ = sideLen - i - 1;
+        for (j = i; j < lenJ; j++)
+        {
+            int lenI = sideLen - j - 1;
+            if(data[i][j] && !this->canSee(j, lenJ) ||
+               data[lenI][i] && !this->canSee(i, j) ||
+               data[lenJ][lenI] && !this->canSee(lenI, i) ||
+               data[j][lenJ] && !this->canSee(lenJ, lenI)){
+                canRotate = false;
+                return false;
+            }
+        }
+    }
+    for (i = 0; i < lenHalf; i++)
 	{
 		lenJ = sideLen - i - 1;
 		for (j = i; j < lenJ; j++)
 		{
+            int lenI = sideLen - j - 1;
 			t = data[i][j];
-			data[i][j] = data[sideLen - j - 1][i];
-			data[sideLen - j - 1][i] = data[sideLen - i -1][sideLen - j - 1];
-			data[sideLen - i - 1][sideLen - j - 1] = data[j][sideLen - i - 1];
-			data[j][sideLen - i - 1] = t;
+            data[i][j] = data[lenI][i];
+            data[lenI][i] = data[lenJ][lenI];
+            data[lenJ][lenI] = data[j][lenJ];
+            data[j][lenJ] = t;
 		}
 	}
 	this->relocate();
