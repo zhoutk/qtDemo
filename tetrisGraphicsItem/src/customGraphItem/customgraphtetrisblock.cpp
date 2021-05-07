@@ -1,5 +1,5 @@
 #include "customgraphtetrisblock.h"
-#include "qDebug"
+#include <QDebug>
 
 extern const int BLOCKSIDEWIDTH;
 
@@ -8,11 +8,12 @@ CustomGraphTetrisBlock::CustomGraphTetrisBlock(int blockType) : pos(QPoint(0,0))
 	this->relocate();
 }
 
-CustomGraphTetrisBlock::CustomGraphTetrisBlock(QPoint pos, int blockType)
+CustomGraphTetrisBlock::CustomGraphTetrisBlock(QPoint pos, int blockType, int colorValue)
 {
 	new (this)CustomGraphTetrisBlock();
 	this->pos = pos;
 	this->blockType = blockType;
+	this->colorValue = colorValue;
 	this->relocate();
 }
 
@@ -39,10 +40,10 @@ Qjson CustomGraphTetrisBlock::getFactors()
 void CustomGraphTetrisBlock::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget /*= nullptr*/)
 {
 	if (blockType) {
-		QBrush brushRef(Qt::darkMagenta);
+		QBrush brushRef(Utils::getColorValueFromIndex(colorValue));
 		brushRef.setStyle(Qt::SolidPattern);
 		painter->setBrush(brushRef);
-		painter->setPen(QPen(Qt::yellow, 1));
+		painter->setPen(QPen(Qt::yellow, lineWidth));
 		painter->drawRoundedRect(
 			0,
 			0,

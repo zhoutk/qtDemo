@@ -15,19 +15,19 @@ QVector<QVector<int>> SHAPES = {
 	{0, 1, 0, 0, 1, 1, 1} 
 };
 
-Tetris::Tetris(int blockType) :
+Tetris::Tetris(int shape) :
 	pos(QPoint(0,0)), 
 	sideLen(BLOCKSIDELENGTH), 
-	blockType(blockType)
+	shape(shape)
 {
 	for (int i = 0; i < sideLen; i++) {
 		data.push_back(QVector<int>(sideLen));
 	}
-	QVector<int> shape = SHAPES[blockType % SHAPES.size()];
-	for (int i = 0; i < shape.size(); i++) {
-		if (shape[i]) {
+	QVector<int> curShape = SHAPES[shape % SHAPES.size()];
+	for (int i = 0; i < curShape.size(); i++) {
+		if (curShape[i]) {
 			data[1 + i / sideLen][i % sideLen] = true;
-			CustomGraphTetrisBlock* block = new CustomGraphTetrisBlock(pos + QPoint(i % sideLen, 1 + i / sideLen), 2);
+			CustomGraphTetrisBlock* block = new CustomGraphTetrisBlock(pos + QPoint(i % sideLen, 1 + i / sideLen), 2, shape);
 			blocks.push_back(block);
 			MainWindow::GetApp()->GetScene()->addItem(block);
 		}
@@ -42,10 +42,10 @@ Tetris::Tetris(QPoint pos)
 	this->relocate();
 }
 
-Tetris::Tetris(QPoint pos, int blockType)
+Tetris::Tetris(QPoint pos, int shape)
 {
-	this->blockType = blockType;
-	new (this)Tetris(blockType);
+	this->shape = shape;
+	new (this)Tetris(shape);
 	this->pos = pos;
 	this->relocate();
 }

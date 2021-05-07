@@ -10,9 +10,9 @@ class Tetris : public QObject
 	Q_OBJECT
 
 public:
-	Tetris(int blockType = 0);
+	Tetris(int shape = 0);
 	Tetris(QPoint pos);
-	Tetris(QPoint pos, int blockType);
+	Tetris(QPoint pos, int shape);
 
 	void relocate();
 	void relocate(QPoint);
@@ -29,7 +29,7 @@ public:
 
 private:
 	QPoint pos;
-	int blockType;
+	int shape;
 	QVector<QVector<int>> data;
 	int sideLen;
 	QVector<CustomGraphTetrisBlock*> blocks;

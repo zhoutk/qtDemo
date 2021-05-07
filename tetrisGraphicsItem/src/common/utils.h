@@ -46,25 +46,25 @@ public:
 			return Qt::red;
 			break;
 		case 1:
-			return Qt::blue;
+			return Qt::magenta;
 			break;
 		case 2:
-			return Qt::green;
+			return Qt::darkMagenta;
 			break;
 		case 3:
 			return Qt::gray;
 			break;
 		case 4:
-			return Qt::darkMagenta;
+			return Qt::darkGreen;
 			break;
 		case 5:
-			return Qt::yellow;
+			return Qt::darkCyan;
 			break;
 		case 6:
-			return Qt::black;
+			return Qt::darkBlue;
 			break;
 		case 9:
-			return Qt::darkCyan;
+			return Qt::blue;
 			break;
 		case 10:
 			return Qt::darkYellow;
