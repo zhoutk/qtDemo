@@ -1,7 +1,7 @@
 #include "tetrisview.h"
 #include "mainwindow.h"
 
-extern bool isRunning;
+extern int isRunning;
 
 TetrisView::TetrisView(QWidget*parent) : QGraphicsView(parent)
 {
@@ -15,7 +15,7 @@ TetrisView::TetrisView(QWidget*parent) : QGraphicsView(parent)
 
 void TetrisView::keyPressEvent(QKeyEvent* event)
 {
-	if (isRunning) {
+	if (isRunning == 1) {
 		if (event->key() == Qt::Key_Up) {
 			MainWindow::GetApp()->GetGame()->rotateBlock();
 		}

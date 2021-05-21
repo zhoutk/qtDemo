@@ -4,7 +4,7 @@
 
 SnowFlake snowFlakeId;
 
-bool isRunning = false;
+int isRunning = 0;      //0-stop; 1-run; 2-relay; 5-pause;
 
 int main(int argc, char *argv[])
 {

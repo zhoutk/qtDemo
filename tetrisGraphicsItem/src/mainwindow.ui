@@ -2,6 +2,9 @@
 <ui version="4.0">
  <class>MainWindow</class>
  <widget class="QMainWindow" name="MainWindow">
+  <property name="enabled">
+   <bool>true</bool>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -23,14 +26,14 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Tetris</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QPushButton" name="pushButtonStart">
     <property name="geometry">
      <rect>
-      <x>330</x>
-      <y>290</y>
+      <x>320</x>
+      <y>320</y>
       <width>80</width>
       <height>23</height>
      </rect>
@@ -223,6 +226,83 @@
     </property>
     <property name="readOnly">
      <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButtonPlayback">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>330</x>
+      <y>390</y>
+      <width>80</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>80</width>
+      <height>0</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>80</width>
+      <height>16777215</height>
+     </size>
+    </property>
+    <property name="text">
+     <string>PLAYBACK</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="comboBoxRecords">
+    <property name="geometry">
+     <rect>
+      <x>330</x>
+      <y>350</y>
+      <width>60</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>60</width>
+      <height>16777215</height>
+     </size>
+    </property>
+    <item>
+     <property name="text">
+      <string>last</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>one</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>two</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>three</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QCheckBox" name="checkBoxAutoPlay">
+    <property name="geometry">
+     <rect>
+      <x>320</x>
+      <y>300</y>
+      <width>71</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>AutoPlay</string>
     </property>
    </widget>
   </widget>

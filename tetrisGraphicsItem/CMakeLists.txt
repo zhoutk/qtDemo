@@ -9,11 +9,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 if(MSVC)
 	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup") 
 	add_compile_options(/wd26451 /wd26812)
-	# set(EnclibName enccore)
+        set(EnclibName Sqlit3.dll)
 elseif(UNIX)
-	# set(EnclibName libenccore.so)
+        set(EnclibName libsqlite3.so)
 endif()
-
+message(${EnclibName})
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 
@@ -30,7 +30,9 @@ find_package(Qt5Core)
 find_package(Qt5Gui)
 #find_package(Qt5Network)
 
-FILE(GLOB_RECURSE SRC_FILES "./src/*.cpp")
+link_directories("libs/rlzLibs")
+
+FILE(GLOB_RECURSE SRC_FILES "./src/*.cpp" "./src/*.c")
 FILE(GLOB_RECURSE HEAD_FILES "./src/*.h")
 FILE(GLOB_RECURSE UI_FILES "./src/*.ui") 
 
@@ -43,3 +45,4 @@ source_group("Src Files" FILES ${SRC_FILES} )
 add_executable(${PROJECT_NAME} ${SRC_FILES} ${HEAD_FILES} ${UI_FILES})
 
 target_link_libraries(${PROJECT_NAME} Qt5::Widgets Qt5::Core Qt5::Gui)
+target_link_libraries(${PROJECT_NAME} ${EnclibName})

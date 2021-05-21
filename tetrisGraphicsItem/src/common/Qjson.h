@@ -6,7 +6,7 @@
 #include <QJsonDocument>
 #include <QString>
 #include <QDebug>
-#include <vector>
+#include <QVector>
 #include <sstream>
 #include <iostream>
 
@@ -23,7 +23,7 @@ public:
 		_IsObject_ = true;
 	}
 
-	Qjson(QByteArray& data) {
+	Qjson(QByteArray data) {
 		QJsonParseError json_error;
 		QJsonDocument jsonDocument = QJsonDocument::fromJson(data, &json_error);
 		if (json_error.error == QJsonParseError::NoError) {
@@ -70,8 +70,8 @@ public:
 		return rs;
 	}
 
-	vector<QString> GetStringArrayByKey(QString k) {
-		vector<QString> rs;
+	QVector<QString> GetStringArrayByKey(QString k) {
+		QVector<QString> rs;
 		if (json->contains(k) && (*json)[k].isArray()) {
 			QJsonArray v = (*json)[k].toArray();
 			size_t len = v.size();
@@ -82,8 +82,8 @@ public:
 		return rs;
 	}
 
-	vector<Qjson> GetObjectsArrayByKey(QString k) {
-		vector<Qjson> rs;
+	QVector<Qjson> GetObjectsArrayByKey(QString k) {
+		QVector<Qjson> rs;
 		if (json->contains(k) && (*json)[k].isArray()) {
 			QJsonArray v = (*json)[k].toArray();
 			size_t len = v.size();
@@ -94,7 +94,7 @@ public:
 		return rs;
 	}
 
-	Qjson ExtendObject(Qjson& obj) {
+    Qjson ExtendObject(Qjson obj) {
 		QJsonObject* src = obj.GetOriginRapidJson();
 		for (auto iter = src->begin(); iter != src->end(); ++iter)
 		{
@@ -121,7 +121,7 @@ public:
 		json->insert(k.c_str(), aObj);
 	}
 
-	void AddValueArray(string k, vector<string>& arr) {
+	void AddValueArray(string k, QVector<string>& arr) {
 		QJsonArray rows;
 		int len = arr.size();
 		for (int i = 0; i < len; i++) {
@@ -130,7 +130,7 @@ public:
 		json->insert(k.c_str(), rows);
 	}
 
-	void AddValueQStringArray(string k, vector<QString>& arr) {
+	void AddValueQStringArray(string k, QVector<QString>& arr) {
 		int len = arr.size();
 		QJsonArray rows;
 		for (int i = 0; i < len; i++) {
@@ -138,13 +138,13 @@ public:
 		}
 		json->insert(k.c_str(), rows);
 	}
-
-	void AddValueObjectsArray(string k, vector<Qjson>& arr) {
+*/
+	void AddValueObjectsArray(string k, QVector<Qjson>& arr) {
 		int len = arr.size();
 		QJsonArray rows;
 		for (int i = 0; i < len; i++) {
 			QJsonObject arow;
-			QJsonObject* al = arr.at(i).GetOriginRapidJson();
+			QJsonObject* al = arr[i].GetOriginRapidJson();
 			for (auto iter = al->begin(); iter != al->end(); ++iter)
 			{
 				arow.insert(iter.key(), iter.value());
@@ -153,7 +153,7 @@ public:
 		}
 
 		json->insert(k.c_str(), rows);
-	}*/
+	}
 
 	QString GetJsonString() {
 		return QString(QJsonDocument(*json).toJson(QJsonDocument::Compact));
@@ -167,12 +167,47 @@ public:
 		QJsonObject::iterator iter = json->find(key);
 		if (iter != json->end()) {
 			*vType = (int)(iter->type());
-            *v = iter->toString();
+			if (iter->isNull()) {
+				*v = QString();
+			}
+			else if (iter->isBool()) {
+				*v = QString("%1").arg(iter->toBool());
+			}
+			else if (iter->isDouble()) {
+				QString tmp = QString::number(iter->toDouble(), 'f');
+				QStringList tmps = tmp.split('.');
+				if (qAbs(tmps[1].toDouble()) < 0.0000001)
+				{
+					*v = tmps[0];
+				}
+				else {
+					*v = tmp;
+				}
+			}
+			else if (iter->isString()) {
+				*v = QString("%1").arg(iter->toString());
+			}
+			else if (iter->isArray()) {
+				*v = QJsonDocument(iter->toArray()).toJson(QJsonDocument::Compact);
+			}
+			else if (iter->isObject()) {
+				*v = QJsonDocument(iter->toObject()).toJson(QJsonDocument::Compact);
+			}
+			else if (iter->isUndefined()) {
+				*v = QString();
+			}
+			else {
+				*v = QString();
+			}
+		}
+		else {
+			*vType = QJsonValue::String;
+			*v = QString();
 		}
 	}
 
-	vector<QString> GetAllKeys() {
-		vector<QString> keys;
+	QStringList GetAllKeys() {
+		QStringList keys;
 		for (auto iter = json->begin(); iter != json->end(); ++iter)
 		{
 			keys.push_back(iter.key());

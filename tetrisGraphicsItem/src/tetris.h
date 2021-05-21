@@ -22,10 +22,15 @@ public:
 	bool moveLeft();
 	bool moveRight();
 	bool moveDown();
+	void setBlockNotActive();
 	void moveDownEnd();
 	int cleanRow();
 	CustomGraphTetrisBlock* hasTetrisBlock(int x, int y);
 	void erase(int x, int y);
+
+	QPoint getPos();
+	int getRotateNum();
+	int getBlockType();
 
 private:
 	QPoint pos;
@@ -33,6 +38,8 @@ private:
 	QVector<QVector<int>> data;
 	int sideLen;
 	QVector<CustomGraphTetrisBlock*> blocks;
+
+	int rotateNum;
 };
 
 #endif // CUSTOMGRAPHTETRIS_H

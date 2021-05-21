@@ -64,7 +64,7 @@ public:
 		datacenterid_ = datacenterid;
 	}
 
-	int64_t nextid()
+	QString nextid()
 	{
 		std::lock_guard<lock_type> lock(lock_);
 		//std::chrono::steady_clock  cannot decrease as physical time moves forward
@@ -84,10 +84,10 @@ public:
 
 		last_timestamp_ = timestamp;
 
-		return ((timestamp - TWEPOCH) << TIMESTAMP_LEFT_SHIFT)
+		return QString::number(((timestamp - TWEPOCH) << TIMESTAMP_LEFT_SHIFT)
 			| (datacenterid_ << DATACENTER_ID_SHIFT)
 			| (workerid_ << WORKER_ID_SHIFT)
-			| sequence_;
+			| sequence_);
 	}
 
 private:

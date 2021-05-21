@@ -14,6 +14,8 @@ public:
     Game();
     ~Game();
     void start();
+    void pause();
+    void resume();
     void rotateBlock();
     void moveBlockLeft();
     void moveBlockRight();
@@ -23,6 +25,8 @@ public:
     int getSpeed();
     int getLevels();
     int getScores();
+    QString getGameID();
+    void playback(QVector<Qjson> arr);
 
 public slots:
     void slotAutoTick();
@@ -42,6 +46,11 @@ private:
     int levels;
     int scores;
     int upScore;
+	int stepNum;
+    QString gameID;
+
+    int playbackIndex;
+    QVector<Qjson> records;
 };
 
 #endif // GAME_H

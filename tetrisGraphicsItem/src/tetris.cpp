@@ -18,7 +18,8 @@ QVector<QVector<int>> SHAPES = {
 Tetris::Tetris(int shape) :
 	pos(QPoint(0,0)), 
 	sideLen(BLOCKSIDELENGTH), 
-	shape(shape)
+	shape(shape),
+	rotateNum(0)
 {
 	for (int i = 0; i < sideLen; i++) {
 		data.push_back(QVector<int>(sideLen));
@@ -80,6 +81,7 @@ bool Tetris::rotate()
             data[j][lenJ] = t;
 		}
 	}
+	this->rotateNum++;
 	this->relocate();
 	return true;
 }
@@ -158,6 +160,14 @@ bool Tetris::moveDown()
 	}
 }
 
+
+
+void Tetris::setBlockNotActive()
+{
+	foreach(auto block, blocks)
+		block->setNotActive();
+}
+
 void Tetris::moveDownEnd()
 {
 	while (this->moveDown());
@@ -231,6 +241,21 @@ void Tetris::erase(int x, int y)
 			return;
 		}
 	}
+}
+
+QPoint Tetris::getPos()
+{
+	return this->pos;
+}
+
+int Tetris::getRotateNum()
+{
+	return this->rotateNum;
+}
+
+int Tetris::getBlockType()
+{
+	return this->shape;
 }
 
 void Tetris::relocate()
