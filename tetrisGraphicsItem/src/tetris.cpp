@@ -21,6 +21,8 @@ Tetris::Tetris(int shape) :
 	shape(shape),
 	rotateNum(0)
 {
+	if (this->blockType != -1)
+		this->blockType = 2;
 	for (int i = 0; i < sideLen; i++) {
 		data.push_back(QVector<int>(sideLen));
 	}
@@ -28,7 +30,7 @@ Tetris::Tetris(int shape) :
 	for (int i = 0; i < curShape.size(); i++) {
 		if (curShape[i]) {
 			data[1 + i / sideLen][i % sideLen] = true;
-			CustomGraphTetrisBlock* block = new CustomGraphTetrisBlock(pos + QPoint(i % sideLen, 1 + i / sideLen), 2, shape);
+			CustomGraphTetrisBlock* block = new CustomGraphTetrisBlock(pos + QPoint(i % sideLen, 1 + i / sideLen), blockType, shape);
 			blocks.push_back(block);
 			MainWindow::GetApp()->GetScene()->addItem(block);
 		}
@@ -45,10 +47,25 @@ Tetris::Tetris(QPoint pos)
 
 Tetris::Tetris(QPoint pos, int shape)
 {
-	this->shape = shape;
 	new (this)Tetris(shape);
 	this->pos = pos;
 	this->relocate();
+}
+
+Tetris::Tetris(QPoint pos, int shape, int blockType)
+{
+	this->blockType = blockType;
+	new (this)Tetris(shape);
+	this->pos = pos;
+	this->relocate();
+}
+
+Tetris::~Tetris()
+{
+	if(this->blockType < 0)
+		foreach(auto block, blocks) {
+			MainWindow::GetApp()->GetScene()->removeItem(block);
+		}
 }
 
 bool Tetris::rotate()
@@ -168,9 +185,36 @@ void Tetris::setBlockNotActive()
 		block->setNotActive();
 }
 
+void Tetris::setBlockTest()
+{
+	foreach(auto block, blocks)
+		block->setTest();
+}
+
 void Tetris::moveDownEnd()
 {
 	while (this->moveDown());
+}
+
+int Tetris::cleanCount()
+{
+		int h = 19, levelCount = 0;
+		while (h >= 0) {
+			int count = 0;
+			for (int i = 0; i < 10; i++) {
+				if (this->hasTetrisBlock(i, h)) {
+					count++;
+				}
+			}
+			if (count == 10) {
+				levelCount++;
+			}
+			else if (count == 0) {
+				break;
+			}
+			h--;
+		}
+		return levelCount;
 }
 
 int Tetris::cleanRow()
@@ -253,7 +297,7 @@ int Tetris::getRotateNum()
 	return this->rotateNum;
 }
 
-int Tetris::getBlockType()
+int Tetris::getShape()
 {
 	return this->shape;
 }

@@ -27,6 +27,9 @@ public:
     int getScores();
     QString getGameID();
     void playback(QVector<Qjson> arr);
+    void setTickValForAtuoPlay(bool isAuto);
+    void autoProcessCurBlock();
+    int evaluate(Tetris*);
 
 public slots:
     void slotAutoTick();
@@ -41,7 +44,7 @@ private:
     Tetris* blockNext;
 	QTimer* autoTick;
 	int tickVal;
-	int tickInterval;
+	int tickValStep;
     int speed;
     int levels;
     int scores;
@@ -51,6 +54,9 @@ private:
 
     int playbackIndex;
     QVector<Qjson> records;
+
+	int originTickVal;
+    bool isAutoRunning;
 };
 
 #endif // GAME_H

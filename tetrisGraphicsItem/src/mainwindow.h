@@ -32,6 +32,10 @@ public slots:
 	void slotUpdateScore();
 	void on_pushButtonStart_clicked();
 	void on_pushButtonPlayback_clicked();
+	void on_checkBoxAutoPlay_clicked();
+
+private:
+	void initNewGame();
 
 private:
 	MainWindow(QWidget* parent = nullptr);

@@ -39,7 +39,7 @@ Qjson CustomGraphTetrisBlock::getFactors()
 
 void CustomGraphTetrisBlock::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget /*= nullptr*/)
 {
-	if (blockType) {
+	if (blockType > 0) {
 		QBrush brushRef(Utils::getColorValueFromIndex(colorValue));
 		brushRef.setStyle(Qt::SolidPattern);
 		painter->setBrush(brushRef);
@@ -63,12 +63,17 @@ int CustomGraphTetrisBlock::getBlockType()
 
 bool CustomGraphTetrisBlock::isActive()
 {
-	return blockType == 2;
+	return blockType == 2 || blockType < 0;
 }
 
 void CustomGraphTetrisBlock::setNotActive()
 {
 	this->blockType = 1;
+}
+
+void CustomGraphTetrisBlock::setTest()
+{
+	this->blockType = -1;
 }
 
 void CustomGraphTetrisBlock::relocate()

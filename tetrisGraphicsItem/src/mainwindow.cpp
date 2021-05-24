@@ -118,11 +118,7 @@ void MainWindow::slotUpdateScore()
 
 void MainWindow::on_pushButtonStart_clicked()
 {
-	if (!game) {
-		game = new Game();
-		connect(game, &Game::signalGameOver, this, &MainWindow::slotGameOver);
-		connect(game, &Game::signalUpdateScore, this, &MainWindow::slotUpdateScore);
-	}
+	this->initNewGame();
 	if (isRunning == 0) {
 		ui->pushButtonStart->setText("Pause");
 		ui->pushButtonPlayback->setEnabled(false);
@@ -151,16 +147,10 @@ void MainWindow::on_pushButtonStart_clicked()
 
 void MainWindow::on_pushButtonPlayback_clicked()
 {
+	this->initNewGame();
 	ui->checkBoxAutoPlay->setEnabled(false);
 	ui->pushButtonStart->setEnabled(false);
 	ui->pushButtonPlayback->setEnabled(false);
-
-	if (!game) {
-		game = new Game();
-		connect(game, &Game::signalGameOver, this, &MainWindow::slotGameOver);
-		connect(game, &Game::signalUpdateScore, this, &MainWindow::slotUpdateScore);
-	}
-
 	QString lastID;
 	Qjson psid;
 	psid.AddValueBase("size", "1");
@@ -210,6 +200,22 @@ void MainWindow::on_pushButtonPlayback_clicked()
 		ui->checkBoxAutoPlay->setEnabled(true);
 		ui->pushButtonStart->setEnabled(true);
 		ui->pushButtonPlayback->setEnabled(true);
+	}
+}
+
+void MainWindow::on_checkBoxAutoPlay_clicked()
+{
+	this->initNewGame();
+	game->setTickValForAtuoPlay(ui->checkBoxAutoPlay->isChecked());
+	gameView->setFocus();
+}
+
+void MainWindow::initNewGame()
+{
+	if (!game) {
+		game = new Game();
+		connect(game, &Game::signalGameOver, this, &MainWindow::slotGameOver);
+		connect(game, &Game::signalUpdateScore, this, &MainWindow::slotUpdateScore);
 	}
 }
 

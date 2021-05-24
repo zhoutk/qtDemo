@@ -1,5 +1,7 @@
 #include "game.h"
 #include "common/Idb/DbBase.h"
+#include "mainwindow.h"
+#include <QDebug>
 
 extern int isRunning;
 extern DbBase* db;
@@ -7,8 +9,8 @@ extern SnowFlake snowFlakeId;
 QVector<int> SCORES = { 0, 1, 3, 7, 10 };
 
 Game::Game():block(nullptr), blockNext(nullptr), autoTick(new QTimer(this)),
-		tickVal(1000), tickInterval(100),speed(1),levels(0),scores(0), upScore(50),
-		stepNum(0), gameID(QString())
+		tickVal(1000), tickValStep(100),speed(1),levels(0),scores(0), upScore(50),
+		stepNum(0), gameID(QString()),originTickVal(1000), isAutoRunning(false)
 {
 	GameSpace space;
 	connect(autoTick, &QTimer::timeout, this, &Game::slotAutoTick);
@@ -37,7 +39,7 @@ void Game::start()
 	int rotateInit = qrand() % 4;
 	for (int i = 0; i < rotateInit; i++)
 		blockNext->rotate();
-	autoTick->setInterval(tickVal);
+	this->setTickValForAtuoPlay(isAutoRunning);
 	autoTick->start();
 }
 
@@ -88,7 +90,7 @@ void Game::generateNextBlock()
 		Qjson params;
 		params.AddValueBase("id", snowFlakeId.nextid());
 		params.AddValueBase("gameId", gameID);
-		params.AddValueBase("blockType", block->getBlockType());
+		params.AddValueBase("blockType", block->getShape());
 		params.AddValueBase("rotateNumber", block->getRotateNum());
 		params.AddValueBase("LocateX", blockPos.x());
 		params.AddValueBase("LocateY", blockPos.y());
@@ -101,8 +103,8 @@ void Game::generateNextBlock()
 	scores += SCORES[levelCount];
 	if (levelCount > 0) {
 		if (scores / upScore >= speed) {
-			int val = tickVal - tickInterval * speed;
-			if(isRunning == 1)
+			int val = tickVal - tickValStep * speed;
+			if(isRunning == 1 && !isAutoRunning)
 				autoTick->setInterval( val > 50 ? val : 50);
 			speed++;
 		}
@@ -138,7 +140,7 @@ void Game::generateNextBlock()
 			Qjson params;
 			params.AddValueBase("id", snowFlakeId.nextid());
 			params.AddValueBase("gameId", gameID);
-			params.AddValueBase("blockType", blockNext->getBlockType());
+			params.AddValueBase("blockType", blockNext->getShape());
 			params.AddValueBase("rotateNumber", blockNext->getRotateNum());
 			params.AddValueBase("LocateX", blockPos.x());
 			params.AddValueBase("LocateY", blockPos.y());
@@ -211,10 +213,109 @@ void Game::playback(QVector<Qjson> arr)
 	autoTick->start();
 }
 
+void Game::setTickValForAtuoPlay(bool isAuto)
+{
+	isAutoRunning = isAuto;
+	if (isAuto) {
+		originTickVal = tickVal;
+		autoTick->setInterval(100);
+	}
+	else {
+		tickVal = originTickVal;
+		autoTick->setInterval(tickVal);
+	}
+}
+
+void Game::autoProcessCurBlock()
+{
+	int max = 0;
+	QPoint initPos = block->getPos();
+	Tetris* tmp = new Tetris(initPos, block->getShape(), -1);
+	int rotateCt = block->getRotateNum();
+	for (int k = 0; k < rotateCt; k++)
+		tmp->rotate();
+	rotateCt = 0;
+
+	for (int r = 0; r < 4; r++) {
+		if (r > 0) {
+			tmp->relocate(initPos);
+			tmp->rotate();
+		}
+		while (tmp->moveLeft());
+		do {
+			tmp->moveDownEnd();
+			tmp->setBlockNotActive();
+			int score = evaluate(tmp);
+			if (score > max) {
+				max = score;
+				curPos = tmp->getPos();
+				rotateCt = r;
+			}
+			else if (score == max) {
+				if (qrand() % 2 == 1) {
+					curPos = tmp->getPos();
+					rotateCt = r;
+				}
+			}
+			//initPos.setX(tmp->getPos().x());
+			tmp->relocate(QPoint(tmp->getPos().x(), initPos.y()));
+			tmp->setBlockTest();
+		} while (tmp->moveRight());
+	}
+	delete tmp;
+	for (int k = 0; k < rotateCt; k++)
+		block->rotate();
+}
+
+int Game::evaluate(Tetris* t)
+{
+	QPoint pos = t->getPos();
+	int ct = pos.y();
+	int cct = t->cleanCount();
+	if (cct > 1)
+		ct += 10 * (cct - 1);
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			if (t->data[i][j]) {
+				ct += t->hasTetrisBlock(pos.x() + j + 1, pos.y() + i) ? 1 : 0;
+				ct += t->hasTetrisBlock(pos.x() + j - 1, pos.y() + i) ? 1 : 0;
+				ct += t->hasTetrisBlock(pos.x() + j, pos.y() + i + 1) ? 1 : 0;
+				ct += t->hasTetrisBlock(pos.x() + j, pos.y() + i - 1) ? 1 : 0;
+
+				if (i == 3 || t->data[i + 1][j] == 0) {
+					if (!t->hasTetrisBlock(pos.x() + j, pos.y() + i + 1)) {
+						ct -= 4;
+					}
+					else {
+						int k = 2;
+						while (pos.y() + i + k <= 19) {
+							if (!t->hasTetrisBlock(pos.x(), pos.y() + i + k)) {
+								ct -= 1;
+								break;
+							}
+							k++;
+						}
+					}
+				}
+			}
+		}
+	}
+	return ct;
+}
+
 void Game::slotAutoTick()
 {
 	if (isRunning == 1) {
-		this->moveBlockDown();
+		if (isAutoRunning) {
+			//long long bg = QDateTime::currentDateTime().toMSecsSinceEpoch();
+			autoProcessCurBlock();
+			block->relocate(curPos);
+			//long long ed = QDateTime::currentDateTime().toMSecsSinceEpoch();
+			//qDebug() << ed - bg << "   " << ed << "----" << bg; block->relocate(curPos);
+			block->setBlockNotActive();
+			generateNextBlock();
+		}else
+			this->moveBlockDown();
 		if (records.size() > 30) {
 			db->insertBatch("gameRecords", records);
 			records.clear();

@@ -24,13 +24,14 @@ public:
 	Qjson getFactors() override;
 	bool isActive() override;
 	void setNotActive();
+	void setTest();
 	int getBlockType() override;
 
 	void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
 
 private:
 	QPoint pos;
-	int blockType;		//0-border; 1-fix block; 2-active; 5-text;
+	int blockType;		//-1 - test; 0-border; 1-fix block; 2-active; 5-text;
 };
 
 #endif // CUSTOMGRAPHTETRISBLOCK_H
