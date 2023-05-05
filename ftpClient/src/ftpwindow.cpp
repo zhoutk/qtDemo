@@ -8,7 +8,7 @@ FtpWindow::FtpWindow(QWidget* parent)
     downFinished(true), enterSubDir(false), currentDownPath("")
 {
     ftpServerLabel = new QLabel(tr("Ftp &server:"));
-    ftpServerLineEdit = new QLineEdit("ftp://root:root@192.168.0.102:21");
+    ftpServerLineEdit = new QLineEdit("ftp://root:root@192.168.6.128:21");
     ftpServerLabel->setBuddy(ftpServerLineEdit);
 
     statusLabel = new QLabel(tr("Please enter the name of an FTP server."));
@@ -219,7 +219,7 @@ void FtpWindow::downAllFile(QString rootDir) {
         QString nextDir(downDirs.pop());
         ftp->cd(nextDir);
         currentDownPath = nextDir;
-        ftp->list();
+		ftp->list();
     }
     else {
         enterSubDir = false;
@@ -317,6 +317,7 @@ void FtpWindow::ftpCommandFinished(int id, bool error)
         delete file;
         file = nullptr;
 		if (files.size() == 0 && !enterSubDir) {
+            fileList->clear();
 			downFinished = true;
 			enableDownloadButton();
 			progressDialog->reset();
@@ -330,6 +331,20 @@ void FtpWindow::ftpCommandFinished(int id, bool error)
             fileList->addTopLevelItem(new QTreeWidgetItem(QStringList() << tr("<empty>")));
             fileList->setEnabled(false);
         }
+		if (!enterSubDir) {
+			if (!fileList->currentItem()) {
+				fileList->setCurrentItem(fileList->topLevelItem(0));
+				fileList->setEnabled(true);
+			}
+		}
+		else {
+			fileList->selectAll();
+			downAllFile(currentDownPath);
+			//cdToParent();
+			//if (currentPath == currentDownPath) {
+			//    enterSubDir = false;
+			//}
+		}
     }
 //![9]
 }
@@ -337,8 +352,12 @@ void FtpWindow::ftpCommandFinished(int id, bool error)
 //![10]
 void FtpWindow::addToList(const QVector<QUrlInfo>& urlInfos)
 {
-    //fileList->clear();
-    int dirIndex = 0;
+    bool hasUpDirOper = false;
+    if (urlInfos.size() > 1 && urlInfos[1].name() == "..") {
+        fileList->clear();
+        hasUpDirOper = true;
+    }
+    int dirIndex = currentPath == "" ? 0 : 1;
 	for (int i = 0; i < urlInfos.size(); i++)
 	{
 		QTreeWidgetItem* item = new QTreeWidgetItem;
@@ -356,27 +375,17 @@ void FtpWindow::addToList(const QVector<QUrlInfo>& urlInfos)
 
 			isDirectory[urlInfo.name()] = urlInfo.isDir();
             if (urlInfo.isDir()) {
-                fileList->insertTopLevelItem(dirIndex++, item);
+                if (hasUpDirOper) {
+                    hasUpDirOper = false;
+                    fileList->insertTopLevelItem(0, item);
+                }
+                else
+                    fileList->insertTopLevelItem(dirIndex++, item);
             }
             else {
 				fileList->addTopLevelItem(item);
             }
 		}
-	}
-
-	if (!enterSubDir) {
-		if (!fileList->currentItem()) {
-			fileList->setCurrentItem(fileList->topLevelItem(0));
-			fileList->setEnabled(true);
-		}
-	}
-	else {
-		fileList->selectAll();
-		downAllFile(currentDownPath);
-		//cdToParent();
-        //if (currentPath == currentDownPath) {
-        //    enterSubDir = false;
-        //}
 	}
 }
 //![10]
@@ -388,8 +397,14 @@ void FtpWindow::processItem(QTreeWidgetItem *item, int /*column*/)
     if (isDirectory.value(name)) {
         fileList->clear();
         isDirectory.clear();
-        currentPath += '/';
-        currentPath += name;
+        if (name == "..") {
+            int index = currentPath.lastIndexOf('/');
+            currentPath = currentPath.mid(0, index);
+        }
+        else {
+			currentPath += '/';
+			currentPath += name;
+        }
         ftp->cd(name);
         ftp->list();
         cdToParentButton->setEnabled(true);
