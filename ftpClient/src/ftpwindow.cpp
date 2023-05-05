@@ -8,7 +8,7 @@ FtpWindow::FtpWindow(QWidget* parent)
     downFinished(true), enterSubDir(false), currentDownPath("")
 {
     ftpServerLabel = new QLabel(tr("Ftp &server:"));
-    ftpServerLineEdit = new QLineEdit("ftp://test:a1b2c3@127.0.0.1:21");
+    ftpServerLineEdit = new QLineEdit("ftp://root:root@192.168.0.102:21");
     ftpServerLabel->setBuddy(ftpServerLineEdit);
 
     statusLabel = new QLabel(tr("Please enter the name of an FTP server."));
@@ -337,7 +337,7 @@ void FtpWindow::ftpCommandFinished(int id, bool error)
 //![10]
 void FtpWindow::addToList(const QVector<QUrlInfo>& urlInfos)
 {
-    fileList->clear();
+    //fileList->clear();
     int dirIndex = 0;
 	for (int i = 0; i < urlInfos.size(); i++)
 	{
